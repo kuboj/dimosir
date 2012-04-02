@@ -80,7 +80,7 @@ class JobExecutor
     end
   end
 
-  # TODO: add_task, remove_tasks, update_tasks, clear_jobs, CONST - max jobs ...etc
+  # TODO: add_task, remove_tasks, update_tasks, clear_jobs, CONST - max jobs ...
   # if there are too many undone jobs -> exception/warning/clear jobs queue
 
 end
