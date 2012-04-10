@@ -1,7 +1,9 @@
 class InputReader
 
-  def initialize
+  @logger
 
+  def initialize(l)
+    @logger = l
   end
 
   def start

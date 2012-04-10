@@ -1,6 +1,7 @@
-# TODO all classes will extend "logable" -> "self.log" ?
+# TODO all classes will extend "LogableModule" -> "self.log" ?
+# TODO : is "puts" thread safe ?
 
-$DEBUG = true
+$DEBUG = false
 port = ARGV[0]
 
 gem "ipaddress"
@@ -8,14 +9,19 @@ gem "ipaddress"
 require("#{File.expand_path(File.dirname(__FILE__))}/listener")
 require("#{File.expand_path(File.dirname(__FILE__))}/input_reader")
 require("#{File.expand_path(File.dirname(__FILE__))}/simple_logger")
+require("#{File.expand_path(File.dirname(__FILE__))}/message_router")
 require("#{File.expand_path(File.dirname(__FILE__))}/sender")
 require("#{File.expand_path(File.dirname(__FILE__))}/pool")
 
+
+
+
+# init
 logger = SimpleLogger.new("debug")
+router = MessageRouter.new(logger)
 
 # start listener
-l = Listener.new(port, logger)
-puts "Listener running on #{port}..."
+l = Listener.new(logger, port, router)
 
 lt = Thread.new do
   l.start
@@ -24,34 +30,14 @@ end
 # start sender
 s = Sender.new(logger)
 
-# start input reader
-i = InputReader.new
-it = Thread.new do
-  i.start
-end
-
 peers = [10000, 10001]
-s = Sender.new
 peers.each do |peer|
   next if peer.to_s == port.to_s
-  msg = "hi, greetings from #{port}\0"
-  puts "server at #{peer} says: #{s.send_msg("127.0.0.1", peer, msg)}"
+  s.send_msg("127.0.0.1", peer, "o'hai!")
 end
 
 # wait for threads
 lt.join
 it.join
-
-=begin
-pt = Thread.new do
-  puts "Starting pool ..."
-  tasks = Array.new
-  10.times do |i|
-    tasks.push(Task.new(i, "/home/bubo/RubymineProjects/bac1/scripts/kvik.sh", i))
-  end
-
-  js = JobExecutor.new(tasks)
-end
-=end
 
 puts "Exit."

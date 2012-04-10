@@ -4,41 +4,43 @@ class Listener
 
   @logger
   @port
+  @router
   @server
 
-  def initialize(port, l)
-    @port = port
+  def initialize(l, p, r)
     @logger = l
+    @port = p
+    @router = r
   end
 
   def start
     @server = TCPServer.open(@port)
+    log("debug", "Listening on #{@port}")
     loop do
       Thread.new(@server.accept) do |connection|
-
-        puts "Accepting connection from: #{connection.peeraddr[2]}"
+        log("debug", "Accepting connection from: #{connection.peeraddr[2]} on local port #{@port}")
 
         begin
+          # TODO: constant DELIMITER
           data = connection.gets("\0")
           if data != nil
             data = data.chomp
           end
 
-          puts "Incoming: #{data}"
-          puts "Simulating work ..."
-          sleep 5
-          puts "Work done."
-
-          connection.print("You said: #{data}\0")
-          connection.flush
+          @router.route(data)
         rescue Exception => e
-          puts "#{e} (#{ e.class })"
+          log("error", "Error receiving message\n\tError: #{e.class}\n\tError msg: #{e.message}")
+          # TODO wtf is puts "#{e}" ?
         ensure
           connection.close
-          puts "ensure: Closing"
         end
       end
     end
+  end
+
+  # TODO: move this to superclass
+  def log(priority, msg)
+    @logger.log(priority, self.class.name, msg)
   end
 
 end
