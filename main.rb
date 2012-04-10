@@ -14,9 +14,6 @@ require("#{File.expand_path(File.dirname(__FILE__))}/message_router")
 require("#{File.expand_path(File.dirname(__FILE__))}/sender")
 require("#{File.expand_path(File.dirname(__FILE__))}/pool")
 
-
-
-
 # init
 logger = SimpleLogger.new("debug")
 router = MessageRouter.new(logger)
