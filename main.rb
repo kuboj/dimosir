@@ -1,5 +1,6 @@
 # TODO all classes will extend "LogableModule" -> "self.log" ?
 # TODO : is "puts" thread safe ?
+# TODO: socket buffering ?
 
 $DEBUG = false
 port = ARGV[0]
@@ -33,7 +34,8 @@ s = Sender.new(logger)
 peers = [10000, 10001]
 peers.each do |peer|
   next if peer.to_s == port.to_s
-  s.send_msg("127.0.0.1", peer, "o'hai!")
+  msg = "hello!"
+  s.send_msg("127.0.0.1", peer, "#{msg}\0")
 end
 
 # wait for threads
