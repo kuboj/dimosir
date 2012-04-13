@@ -5,6 +5,7 @@ class SimpleLogger
   def initialize(p)
     #raise ArgumentError unless in array("debug", "info", "warning", "error"))
     # TODO constants SimpleLogger.debug ...
+    # TODO parameter "where" stdout/stder/file
 
     @priority = p
   end
@@ -13,7 +14,7 @@ class SimpleLogger
     # if priority < logging treshold -> don't log
     # TODO puts on STDERR
     # TODO smart indent
-    puts("[#{Time.now.to_s}] #{priority.upcase!}] [#{who}] - #{msg}\n")
+    STDERR.puts("[#{Time.now.to_s}] [#{priority.upcase!}] [#{who}] - #{msg}\n")
   end
 
 end

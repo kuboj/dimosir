@@ -2,8 +2,8 @@
 # TODO : is "puts" thread safe ?
 # TODO: socket buffering ?
 
-$DEBUG = false
-port = ARGV[0]
+$DEBUG = true
+port = ARGV[0] # TODO: check
 
 gem "ipaddress"
 
@@ -19,20 +19,19 @@ logger = SimpleLogger.new("debug")
 router = MessageRouter.new(logger)
 
 # start listener
-l = Listener.new(logger, port, router)
+listener = Listener.new(logger, port, router)
 
 lt = Thread.new do
-  l.start
+  listener.start
 end
 
 # start sender
-s = Sender.new(logger)
+sender = Sender.new(logger)
 
-peers = [10000, 10001]
-peers.each do |peer|
-  next if peer.to_s == port.to_s
-  msg = "hello!"
-  s.send_msg("127.0.0.1", peer, "#{msg}\0")
+# start input reader
+reader = InputReader.new(logger, sender)
+rt = Thread.new do
+  reader.start
 end
 
 # wait for threads

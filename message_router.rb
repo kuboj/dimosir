@@ -7,7 +7,7 @@ class MessageRouter
   end
 
   def route(msg)
-    # TODO might not be valid message (?)
+    # TODO might not be valid message (?``)
     # TODO
     log("debug", "got message! #{msg}")
   end

@@ -19,13 +19,13 @@ class Sender
 
     begin
       socket = TCPSocket.new(ip.to_s, port.to_i)
-      socket.print(msg) # TODO check retval
+      socket.print("#{msg}\0")
     rescue => e
       # TODO: substitute for constant @see SimpleLogger
       log("error", "Error sending message.\n\tmsg: #{msg}\n\tto: #{ip}:#{port}\n\terror msg: #{e.message}")
       no_error = false
     ensure
-      socket.close unless socket.nil?
+      #socket.close unless socket.nil?
     end
 
     log("debug", "Message sent: #{no_error}")
