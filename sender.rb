@@ -8,6 +8,7 @@ class Sender
     @logger = l
   end
 
+  # TODO: parameters-> Peer, String ?
   def send_msg(ip, port, msg)
     log("debug", "Trying to send msg '#{msg}' to #{ip}:#{port}")
 

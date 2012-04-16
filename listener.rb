@@ -24,10 +24,13 @@ class Listener
           # TODO: constant DELIMITER
           data = connection.gets("\0")
           if data != nil
-            data = data.chomp
+            data.chomp!
+            if data[-1] == "\0"
+              data.chop!
+            end
           end
 
-          @router.route(data)
+          @router.consume_message(data)
         rescue Exception => e
           log("error", "Error receiving message\n\tError: #{e.class}\n\tError msg: #{e.message}")
           # TODO wtf is puts "#{e}" ?

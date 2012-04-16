@@ -13,6 +13,7 @@ class InputReader
       port = STDIN.gets.chomp.to_i
       msg = STDIN.gets.chomp
       log("debug", "Got on input: #{port}, #{msg}")
+      @sender.send_msg("127.0.0.1", port, msg)
     end
   end
 
