@@ -6,8 +6,12 @@
 # TODO: init.d/upstart script
 
 $DEBUG = true
-$port = ARGV[0] # TODO: check
+ip = ARGV[0]
+port = ARGV[1] # TODO: check
 
+gem "bson"
+gem "bson_ext"
+gem "fast_xs"
 gem "ipaddress"
 gem "mongo"
 gem "mongo_mapper"
@@ -25,7 +29,7 @@ logger    = SimpleLogger.new("debug")
 db        = Db.new(logger)
 sender    = Sender.new(logger)
 
-kernel    = DimosirKernel.new(logger, db, sender)
+kernel    = DimosirKernel.new(logger, db, sender, ip, Integer(port))
 listener  = Listener.new(logger, port, kernel)
 reader    = InputReader.new(logger, sender)
 

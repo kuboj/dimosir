@@ -1,12 +1,14 @@
-require "mongo"
-require "mongoid"
+require "mongo_mapper"
+require "bson"
 
 class Peer
-  incude Mongoid::Document
-  store_in :peers
+  include MongoMapper::Document
+  set_collection_name "peers"
 
-  field :ip, type: String
-  field :port, type: Integer
+  key :ip,    String
+  key :port,  Integer
+  safe
+  timestamps!
 end
 
 class Db
@@ -18,22 +20,18 @@ class Db
     @logger = l
 
     # TODO: ext. parameters
-    Mongoid.database = Mongo::Connection.new("127.0.0.1").db("test")
-    Mongoid.database.authenticate("admin", "admin")
-    Mongoid.logger = Logger.new($stdout)
+    MongoMapper.connection = Mongo::Connection.new("127.0.0.1")
+    MongoMapper.database = "test"
+    MongoMapper.connection["test"].authenticate("admin", "admin")
   end
 
-  def get_peers()
-    return Peers.all_in
-=begin
-    peers = [
-          Hash[:id => 1, :port => 10000, :ip => "127.0.0.1"],
-          Hash[:id => 2, :port => 10001, :ip => "127.0.0.1"],
-          Hash[:id => 3, :port => 10002, :ip => "127.0.0.1"]
-    ]
-    log("debug", "get_peers: #{peers.to_s}")
-    return peers
-=end
+  def get_peers(criteria)
+    return Peer.all(criteria)
+  end
+
+  def add_peer(ip, port)
+    p = Peer.create!("ip" => ip, "port" => port)
+    return p.id
   end
 
   # TODO: move this to superclass

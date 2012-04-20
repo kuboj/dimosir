@@ -1,17 +1,45 @@
 class DimosirKernel
 
+  @peer_id
+
   @logger
   @db
   @sender
 
+  @ip
+  @port
+
   @new_election
   @ok_received
 
-  def initialize(l, d, s)
+  def initialize(l, d, s, i, p)
     @logger = l
     @db = d
     @sender = s
     @new_election = false
+    @ip = i
+    @port = p
+
+    # TODO: check ip and port on input, IPAddr object
+    # port has to be integer, > 1000, < 65000
+
+    set_peer_id
+  end
+
+  def set_peer_id
+    is_in_db = false
+    peers = @db.get_peers(:ip => @ip, :port => @port, :order => :created_at.asc)
+    if peers.count == 0
+      log("debug", "peer id not in db, adding.")
+      @peer_id = @db.add_peer(@ip, @port)
+      log("debug", "peer id: #{@peer_id}")
+    elsif peers.count == 1
+      @peer_id = peers[0].id
+      log("debug", "peer found in db. id: #{@peer_id}")
+    else # peers.count > 1
+      log("warning", "multiple peers with ip #{ip} and port #{port} found. taking first")
+      @peer_id = peers[0].id
+    end
   end
 
   def consume_message(msg)
