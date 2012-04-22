@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 # TODO : is "puts" thread safe ?
 # TODO: socket buffering ?
 # TODO: .conf parsing
@@ -25,8 +27,7 @@ require("#{File.expand_path(File.dirname(__FILE__))}/simple_logger")
 require("#{File.expand_path(File.dirname(__FILE__))}/dimosir_kernel")
 require("#{File.expand_path(File.dirname(__FILE__))}/sender")
 require("#{File.expand_path(File.dirname(__FILE__))}/pool")
-require "trollop"
-require "pathname"
+require("#{File.expand_path(File.dirname(__FILE__))}/lib/trollop")
 
 opts = Trollop::options do
   version "test 1.2.3 (c) 2012 blabla" # TODO
@@ -43,7 +44,7 @@ EOS
 end
 
 Trollop::die :ip, "IP has to be set" if !opts[:ip]
-Trollop::die :port, "port has to be set" if !opts[:ip]
+Trollop::die :port, "port has to be set" if !opts[:port]
 Trollop::die :log_level, "Log level has to be in #{SimpleLogger.get_log_level_values.to_s}" \
   if !SimpleLogger.get_log_level_values.include?(opts[:log_level])
 
