@@ -31,4 +31,17 @@ class SimpleLogger
     STDERR.puts("[#{Time.now.to_s}] [#{@constants[priority]}] [#{who}] - #{msg}\n")
   end
 
+  def self.get_log_levels_str
+    str = "Logging level. Possible values: "
+    self.constants.each do |c|
+      str += "#{self.const_get(c)} - #{c.id2name.downcase}, "
+    end
+
+    return str
+  end
+
+  def self.get_log_level_values
+    return self.constants.map { |c| self.const_get(c) }
+  end
+
 end
