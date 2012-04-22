@@ -3,7 +3,6 @@ require "bson"
 
 class Peer
   include MongoMapper::Document
-  include Loggable
 
   set_collection_name "peers"
 

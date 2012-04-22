@@ -16,7 +16,7 @@ class InputReader
     loop do
       port = STDIN.gets.chomp.to_i
       msg = STDIN.gets.chomp
-      log("debug", "Got on input: #{port}, #{msg}")
+      log(SimpleLogger::DEBUG, "Got on input: #{port}, #{msg}")
       @sender.send_msg(@peer_self, Peer.new(:ip => "127.0.0.1", :port => port), msg)
     end
   end

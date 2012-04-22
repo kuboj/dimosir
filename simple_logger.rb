@@ -1,20 +1,34 @@
+# TODO parameter "where" stdout/stder/file ?
+
 class SimpleLogger
 
-  @priority # logging treshold
+  include Loggable
 
-  def initialize(p)
-    #raise ArgumentError unless in array("debug", "info", "warning", "error"))
-    # TODO constants SimpleLogger.debug ...
-    # TODO parameter "where" stdout/stder/file
+  DEBUG   = 1
+  WARNING = 2
+  ERROR   = 3
 
-    @priority = p
+  @constants # HashMap const_value => const_name
+  @threshold # logging threshold
+
+  def initialize(t)
+    @constants = Hash.new
+    self.class.constants.each do |c|
+      @constants[self.class.const_get(c)] = c.id2name
+    end
+
+    raise ArgumentError, "#{t} is not valid logging threshold" unless @constants.include?(t)
+
+    @threshold = t
+    @logger = self
+    log(DEBUG, "Logger initialized with logging threshold: #{@constants[t]}")
   end
 
-  def log(priority, who, msg)
-    # if priority < logging treshold -> don't log
-    # TODO puts on STDERR
-    # TODO smart indent
-    STDERR.puts("[#{Time.now.to_s}] [#{priority.upcase!}] [#{who}] - #{msg}\n")
+  def llog(priority, who, msg)
+    return if priority < @threshold
+
+    # TODO smart indent in output
+    STDERR.puts("[#{Time.now.to_s}] [#{@constants[priority]}] [#{who}] - #{msg}\n")
   end
 
 end

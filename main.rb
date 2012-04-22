@@ -1,4 +1,3 @@
-# TODO mixin, module "Loggable" -> "log" ?
 # TODO : is "puts" thread safe ?
 # TODO: socket buffering ?
 # TODO: .conf parsing
@@ -28,7 +27,7 @@ require("#{File.expand_path(File.dirname(__FILE__))}/sender")
 require("#{File.expand_path(File.dirname(__FILE__))}/pool")
 
 # init
-logger    = SimpleLogger.new("debug")
+logger    = SimpleLogger.new(SimpleLogger::DEBUG)
 db        = Db.new(logger)
 sender    = Sender.new(logger)
 

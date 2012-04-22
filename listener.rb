@@ -2,6 +2,8 @@ require "socket"
 
 class Listener
 
+  include Loggable
+
   @logger
   @port
   @router
@@ -15,10 +17,10 @@ class Listener
 
   def start
     @server = TCPServer.open(@port)
-    log("debug", "Listening on #{@port}")
+    log(SimpleLogger::DEBUG, "Listening on #{@port}")
     loop do
       Thread.new(@server.accept) do |connection|
-        log("debug", "Accepting connection from: #{connection.peeraddr[2]} on local port #{@port}")
+        log(SimpleLogger::DEBUG, "Accepting connection from: #{connection.peeraddr[2]} on local port #{@port}")
 
         begin
           # TODO: constant DELIMITER
@@ -30,7 +32,7 @@ class Listener
             end
           end
 
-          log("debug", "raw message: #{data}")
+          log(SimpleLogger::DEBUG, "raw message: #{data}")
 
           # TODO: begin/rescue block while constructing Peer
           peer = Peer.from_json(data.split("|", 2).first)
@@ -38,17 +40,12 @@ class Listener
 
           @router.consume_message(peer, msg)
         rescue Exception => e
-          log("error", "Error receiving message\n\tError: #{e.class}\n\tError msg: #{e.message}")
+          log(SimpleLogger::ERROR, "Error receiving message\n\tError: #{e.class}\n\tError msg: #{e.message}")
         ensure
           connection.close unless connection.nil?
         end
       end
     end
-  end
-
-  # TODO: move this to superclass
-  def log(priority, msg)
-    @logger.log(priority, self.class.name, msg)
   end
 
 end
