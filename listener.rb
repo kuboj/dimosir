@@ -30,12 +30,17 @@ class Listener
             end
           end
 
-          @router.consume_message(data)
+          log("debug", "raw message: #{data}")
+
+          # TODO: begin/rescue block while constructing Peer
+          peer = Peer.from_json(data.split("|", 2).first)
+          msg = data.split("|", 2).last
+
+          @router.consume_message(peer, msg)
         rescue Exception => e
           log("error", "Error receiving message\n\tError: #{e.class}\n\tError msg: #{e.message}")
-          # TODO wtf is puts "#{e}" ?
         ensure
-          connection.close
+          connection.close unless connection.nil?
         end
       end
     end

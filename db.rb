@@ -1,16 +1,6 @@
 require "mongo_mapper"
 require "bson"
 
-class Peer
-  include MongoMapper::Document
-  set_collection_name "peers"
-
-  key :ip,    String
-  key :port,  Integer
-  safe
-  timestamps!
-end
-
 class Db
 
   @logger
@@ -31,7 +21,7 @@ class Db
 
   def add_peer(ip, port)
     p = Peer.create!("ip" => ip, "port" => port)
-    return p.id
+    return p
   end
 
   # TODO: move this to superclass

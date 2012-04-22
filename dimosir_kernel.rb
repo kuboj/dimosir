@@ -1,51 +1,45 @@
 class DimosirKernel
 
-  @peer_id
+  @peer_self
 
   @logger
   @db
   @sender
 
-  @ip
-  @port
-
-  @new_election
-  @ok_received
-
-  def initialize(l, d, s, i, p)
+  def initialize(l, d, s, ip, port)
     @logger = l
     @db = d
     @sender = s
-    @new_election = false
-    @ip = i
-    @port = p
 
     # TODO: check ip and port on input, IPAddr object
     # port has to be integer, > 1000, < 65000
 
-    set_peer_id
+    set_peer_self(ip, port)
   end
 
-  def set_peer_id
+  def set_peer_self(ip, port)
     is_in_db = false
-    peers = @db.get_peers(:ip => @ip, :port => @port, :order => :created_at.asc)
+    peers = @db.get_peers(:ip => ip, :port => port, :order => :created_at.asc)
     if peers.count == 0
       log("debug", "peer id not in db, adding.")
-      @peer_id = @db.add_peer(@ip, @port)
-      log("debug", "peer id: #{@peer_id}")
+      @peer_self = @db.add_peer(ip, port)
+      log("debug", "peer: #{@peer_self.id}")
     elsif peers.count == 1
-      @peer_id = peers[0].id
-      log("debug", "peer found in db. id: #{@peer_id}")
+      @peer_self = peers[0]
+      log("debug", "peer found in db: #{@peer_self.id}")
     else # peers.count > 1
       log("warning", "multiple peers with ip #{ip} and port #{port} found. taking first")
-      @peer_id = peers[0].id
+      @peer_self = peers[0]
     end
   end
 
-  def consume_message(msg)
+  def get_peer_self
+    return @peer_self
+  end
+
+  def consume_message(peer_from, msg)
     Thread.new do
-      # TODO might not be valid message (?)
-      log("debug", "got message! #{msg}")
+      log("debug", "Got msg from #{peer_from.ip}:#{peer_from.port} (id: #{peer_from.id}): #{msg}")
 
       if msg == "start"
         log("debug", "start election")
