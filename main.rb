@@ -21,7 +21,6 @@ require("#{File.expand_path(File.dirname(__FILE__))}/dimosir_kernel")
 require("#{File.expand_path(File.dirname(__FILE__))}/sender")
 require("#{File.expand_path(File.dirname(__FILE__))}/pool")
 require("#{File.expand_path(File.dirname(__FILE__))}/lib/trollop")
-require "pathname"
 
 # parse commandline arguments
 opts = Cmd.parse_argv

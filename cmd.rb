@@ -1,3 +1,5 @@
+require "pathname"
+
 class Cmd
 
   def self.parse_argv
