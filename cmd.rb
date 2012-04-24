@@ -4,11 +4,11 @@ class Cmd
 
   def self.parse_argv
     opts = Trollop::options do
-      version "test 1.2.3 (c) 2012 blabla" # TODO
+      version "main 0.1 uberbeta (c) 2012 Jakub Jursa" # TODO
       banner <<-EOS
-Test is an awesome program that does something very, very important.
+Distributed monitoring system in ruby.
 
-Usage: #{Pathname.new(__FILE__).basename} [options]
+Usage: main.rb [options]
 
       EOS
 

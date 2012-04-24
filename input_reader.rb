@@ -4,12 +4,10 @@ class InputReader
 
   @logger
   @sender
-  @peer_self
 
-  def initialize(l, s, p)
+  def initialize(l, s)
     @logger = l
     @sender = s
-    @peer_self = p
   end
 
   def start
@@ -17,7 +15,7 @@ class InputReader
       port = STDIN.gets.chomp.to_i
       msg = STDIN.gets.chomp
       log(SimpleLogger::DEBUG, "Got on input: #{port}, #{msg}")
-      @sender.send_msg(@peer_self, Peer.new(:ip => "127.0.0.1", :port => port), msg)
+      @sender.send_msg(Peer.new(:ip => "127.0.0.1", :port => port), msg)
     end
   end
 

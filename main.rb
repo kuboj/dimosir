@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+require "rubygems"
+require "bundler/setup"
+
 # TODO: Gemfile
 # TODO: capturing signals in ruby
 # TODO: init.d/upstart script
@@ -28,10 +31,13 @@ opts = Cmd.parse_argv
 # init
 logger    = SimpleLogger.new(opts[:log_level])
 db        = Db.new(logger)
-sender    = Sender.new(logger)
-kernel    = DimosirKernel.new(logger, db, sender, opts[:ip], opts[:port])
+
+peer_self = db.get_peer(opts[:ip], opts[:port])
+
+sender    = Sender.new(logger, peer_self)
+kernel    = DimosirKernel.new(logger, db, sender, peer_self)
 listener  = Listener.new(logger, opts[:port], kernel)
-reader    = InputReader.new(logger, sender, kernel.get_peer_self)
+reader    = InputReader.new(logger, sender)
 
 # start listener
 lt = Thread.new do

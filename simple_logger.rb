@@ -5,8 +5,9 @@ class SimpleLogger
   include Loggable
 
   DEBUG   = 1
-  WARNING = 2
-  ERROR   = 3
+  INFO    = 2
+  WARNING = 3
+  ERROR   = 4
 
   @constants # HashMap const_value => const_name
   @threshold # logging threshold
