@@ -23,6 +23,8 @@ require("#{File.expand_path(File.dirname(__FILE__))}/simple_logger")
 require("#{File.expand_path(File.dirname(__FILE__))}/dimosir_kernel")
 require("#{File.expand_path(File.dirname(__FILE__))}/sender")
 require("#{File.expand_path(File.dirname(__FILE__))}/pool")
+require("#{File.expand_path(File.dirname(__FILE__))}/election")
+
 require("#{File.expand_path(File.dirname(__FILE__))}/lib/trollop")
 
 # parse commandline arguments
@@ -48,6 +50,8 @@ end
 rt = Thread.new do
   reader.start
 end
+
+kernel.start
 
 # wait for threads
 lt.join

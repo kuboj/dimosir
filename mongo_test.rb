@@ -8,20 +8,22 @@ MongoMapper.connection["test"].authenticate("admin", "admin")
 class Article
   include MongoMapper::Document
 
-  key :title,        String
+  key :title,        String, :required => true
   key :content,      String
   key :published_at, Time
   timestamps!
   safe
 end
 
-a = Article.create({
+a = Article.new({
+  :id => "mehehehe",
   :title => "meh",
   :content => "kvak",
   :published_at => Time.now
 })
 
-
-
-puts "kvik!"
-puts a.id
+puts "**"
+puts a.title
+puts "**"
+puts a.save
+puts "**"

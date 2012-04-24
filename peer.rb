@@ -6,13 +6,13 @@ class Peer
 
   set_collection_name "peers"
 
-  key :ip,    String
-  key :port,  Integer
+  key :ip,    String,   :required => true
+  key :port,  Integer,  :required => true
 
   safe
   timestamps!
 
-  def self.from_json(json)
+  def self.new_from_json(json)
     hash = nil
     begin
       hash = JSON.parse(json)
@@ -25,6 +25,22 @@ class Peer
     else
       raise ArgumentError, "Invalid json, values missing - #{json}"
     end
+  end
+
+  def info
+    "[#{ip}:#{port} #{id}]"
+  end
+
+  def <(peer)
+    id.to_s < peer.id.to_s
+  end
+
+  def >(peer)
+    id.to_s > peer.id.to_s
+  end
+
+  def ==(peer)
+    id.to_s == peer.id.to_s
   end
 
 end

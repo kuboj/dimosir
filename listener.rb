@@ -35,7 +35,7 @@ class Listener
           log(SimpleLogger::DEBUG, "raw message: #{data}")
 
           # TODO: begin/rescue block while constructing Peer
-          peer = Peer.from_json(data.split("|", 2).first)
+          peer = Peer.new_from_json(data.split("|", 2).first)
           msg = data.split("|", 2).last
 
           @router.consume_message(peer, msg)
