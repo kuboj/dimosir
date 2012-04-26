@@ -1,3 +1,5 @@
+# TODO: ako zdtetekujem, ze som zomrel/ozivol ?
+
 class DimosirKernel
 
   include Loggable
@@ -14,7 +16,7 @@ class DimosirKernel
     @db = d
     @sender = s
     @peer_self = p
-    @peer_master = ?
+    #@peer_master = ?
   end
 
   def start
@@ -39,14 +41,19 @@ class DimosirKernel
           Thread.new { start_election }
         end
 
-        if peer_from > @peer_self
-          log(SimpleLogger::DEBUG, "just heard Election:MSG_ELECTION from higher peer (#{peer_from.info})")
-          @heard_from_higher = true
-        end
+        #if peer_from > @peer_self
+        #  log(SimpleLogger::DEBUG, "just heard Election:MSG_ELECTION from higher peer (#{peer_from.info})")
+        #  @heard_from_higher = true
+        #end
       end
 
       if msg == Election::MSG_MASTER
         log(SimpleLogger::DEBUG, "ok, #{peer_from.info} is master.")
+      end
+
+      if msg == Election::MSG_ALIVE
+        log(SimpleLogger::DEBUG, "#{peer_from.info} is alive, i cannot be master")
+        @heard_from_higher = true
       end
 
     end

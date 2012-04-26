@@ -15,7 +15,7 @@ class Article
   safe
 end
 
-a = Article.new({
+a = Article.create({
   :id => "mehehehe",
   :title => "meh",
   :content => "kvak",
@@ -25,5 +25,5 @@ a = Article.new({
 puts "**"
 puts a.title
 puts "**"
-puts a.save
+#puts a.save
 puts "**"
