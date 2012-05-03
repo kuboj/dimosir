@@ -4,15 +4,11 @@ class SimpleLogger
 
   include Loggable
 
-  DEBUG   = 1
-  INFO    = 2
-  WARNING = 3
-  ERROR   = 4
+  @constants        # HashMap const_value => const_name
+  @threshold        #  logging threshold
+  @modules_ignored
 
-  @constants # HashMap const_value => const_name
-  @threshold # logging threshold
-
-  def initialize(t)
+  def initialize(t, mi)
     @constants = Hash.new
     self.class.constants.each do |c|
       @constants[self.class.const_get(c)] = c.id2name
@@ -21,12 +17,13 @@ class SimpleLogger
     raise ArgumentError, "#{t} is not valid logging threshold" unless @constants.include?(t)
 
     @threshold = t
+    @modules_ignored = mi.map { |m| m.downcase }
     @logger = self
     log(DEBUG, "Logger initialized with logging threshold: #{@constants[t]}")
   end
 
   def llog(priority, who, msg)
-    return if priority < @threshold
+    return if priority < @threshold || @modules_ignored.include?(who.downcase)
 
     # TODO smart indent in output
     STDERR.puts("[#{Time.now.to_s}] [#{@constants[priority]}] [#{who}] - #{msg}\n")

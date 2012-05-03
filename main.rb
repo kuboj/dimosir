@@ -3,10 +3,10 @@
 require "rubygems"
 require "bundler/setup"
 
-# TODO: Gemfile
 # TODO: capturing signals in ruby
 # TODO: init.d/upstart script
 # TODO: daemonize
+# TODO: thread checking network connection. if down, then kill itself
 
 # config
 #$DEBUG = true
@@ -31,13 +31,14 @@ require("#{File.expand_path(File.dirname(__FILE__))}/lib/trollop")
 opts = Cmd.parse_argv
 
 # init
-logger    = SimpleLogger.new(opts[:log_level])
+logger    = SimpleLogger.new(opts[:log_level], %w(sender))
 db        = Db.new(logger)
 
 peer_self = db.get_peer(opts[:ip], opts[:port])
 
 sender    = Sender.new(logger, peer_self)
-kernel    = DimosirKernel.new(logger, db, sender, peer_self)
+election  = Election.new(logger, db, sender, peer_self)
+kernel    = DimosirKernel.new(logger, db, sender, peer_self, election)
 listener  = Listener.new(logger, opts[:port], kernel)
 reader    = InputReader.new(logger, sender)
 

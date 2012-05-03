@@ -17,18 +17,27 @@ class Db
     MongoMapper.connection["test"].authenticate("admin", "admin")
   end
 
-  def get_peers(criteria)
-    return Peer.all(criteria)
+  def get_all_peers
+    Peer.all
+  end
+
+  def get_higher_peers(peer_self)
+    peers = get_other_peers(peer_self)
+    peers.select! { |peer| peer > peer_self } # leave higher peers only
+    return peers
+  end
+
+  def get_other_peers(peer_self)
+    Peer.all(:id => {:$ne => peer_self.id})
   end
 
   def add_peer(ip, port)
-    p = Peer.create!("ip" => ip, "port" => port)
-    return p
+    Peer.create!("ip" => ip, "port" => port)
   end
 
   def get_peer(ip, port)
     is_in_db = false
-    peers = get_peers(:ip => ip, :port => port, :order => :created_at.asc)
+    peers = Peer.all(:ip => ip, :port => port, :order => :created_at.asc)
     peer_self = nil
 
     if peers.count == 0
@@ -45,9 +54,5 @@ class Db
 
     return peer_self
   end
-
-  #def get_higher_peers(peer)
-  #  return get_peers(:id.gt => @peer_self.id)
-  #end
 
 end

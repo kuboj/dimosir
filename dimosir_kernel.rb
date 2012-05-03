@@ -1,5 +1,3 @@
-# TODO: ako zdtetekujem, ze som zomrel/ozivol ?
-
 class DimosirKernel
 
   include Loggable
@@ -10,74 +8,48 @@ class DimosirKernel
   @logger
   @db
   @sender
+  @election
 
-  def initialize(l, d, s, p)
+  def initialize(l, d, s, p, e)
     @logger = l
     @db = d
     @sender = s
     @peer_self = p
-    #@peer_master = ?
+    @election = e
+
+    @election.on_new_master = Proc.new do |new_master|
+      if @peer_self == new_master
+        log(DEBUG, "I am still master, heh!")
+      else
+        log(DEBUG, "new master #{new_master.info}")
+      end
+
+      @peer_master = new_master
+    end
   end
 
   def start
-    start_election
-  end
-
-  def get_peer_self
-    return @peer_self
+    @election.start_election
   end
 
   def consume_message(peer_from, msg)
     Thread.new do
-      log(SimpleLogger::DEBUG, "Got msg from #{peer_from.info}): #{msg}")
-      if msg == "s"
-        start_election
-      end
+      log(DEBUG, "Got msg from #{peer_from.info}): #{msg}")
 
-      if msg == Election::MSG_ELECTION
-        log(SimpleLogger::DEBUG, "got msg election from #{peer_from.info}")
-        if peer_from < @peer_self
-          @sender.send_msg(peer_from, Election::MSG_ALIVE)
-          Thread.new { start_election }
-        end
+=begin
+msg_type = msg.split(".").first
+msg_action = msg.split(".").last
 
-        #if peer_from > @peer_self
-        #  log(SimpleLogger::DEBUG, "just heard Election:MSG_ELECTION from higher peer (#{peer_from.info})")
-        #  @heard_from_higher = true
-        #end
-      end
+if msg_type == "election"
+  @election.send(msg_action, peer_from)
+end
+=end
+      if msg == Election::MSG_ELECTION then @election.msg_election(peer_from) end
+      if msg == Election::MSG_MASTER then @election.msg_master(peer_from) end
+      if msg == Election::MSG_ALIVE then @election.msg_alive(peer_from) end
 
-      if msg == Election::MSG_MASTER
-        log(SimpleLogger::DEBUG, "ok, #{peer_from.info} is master.")
-      end
-
-      if msg == Election::MSG_ALIVE
-        log(SimpleLogger::DEBUG, "#{peer_from.info} is alive, i cannot be master")
-        @heard_from_higher = true
-      end
 
     end
-  end
-
-  def start_election
-    log(SimpleLogger::DEBUG, "start_election")
-    @heard_from_higher = false
-    peers = @db.get_peers(:id => {:$ne => @peer_self.id}) # all other peers but me
-
-    peers.each do |peer|
-      log(SimpleLogger::DEBUG, "sending Election::MSG_ELECTION to #{peer.info}")
-      @sender.send_msg(peer, Election::MSG_ELECTION) if peer > @peer_self
-    end
-
-    log(SimpleLogger::DEBUG, "waiting for election")
-    sleep(5)
-    log(SimpleLogger::DEBUG, "end of waiting for election. heard_from_higher: #@heard_from_higher")
-
-    if !@heard_from_higher
-      log(SimpleLogger::DEBUG, "broadcasting that I AM THE MASTER")
-      peers.each { |peer| @sender.send_msg(peer, Election::MSG_MASTER) }
-    end
-
   end
 
 end
