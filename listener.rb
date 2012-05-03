@@ -17,7 +17,7 @@ class Listener
 
   def start
     @server = TCPServer.open(@port)
-    log(SimpleLogger::DEBUG, "Listening on #{@port}")
+    log(SimpleLogger::INFO, "Listening on #{@port}")
     loop do
       Thread.new(@server.accept) do |connection|
         log(SimpleLogger::DEBUG, "Accepting connection from: #{connection.peeraddr[2]} on local port #{@port}")

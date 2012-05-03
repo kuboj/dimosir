@@ -19,9 +19,9 @@ class DimosirKernel
 
     @election.on_new_master = Proc.new do |new_master|
       if @peer_self == new_master
-        log(DEBUG, "I am still master, heh!")
+        log(INFO, "I am still master, heh!")
       else
-        log(DEBUG, "new master #{new_master.info}")
+        log(INFO, "new master #{new_master.info}")
       end
 
       @peer_master = new_master
@@ -29,25 +29,20 @@ class DimosirKernel
   end
 
   def start
-    @election.start_election
+    Thread.new { @election.start_election }
   end
 
   def consume_message(peer_from, msg)
     Thread.new do
       log(DEBUG, "Got msg from #{peer_from.info}): #{msg}")
 
-=begin
-msg_type = msg.split(".").first
-msg_action = msg.split(".").last
+      #msg_type = msg.split(".").first
+      #msg_action = msg.split(".").last
+      #if msg_type == "election" then @election.send(msg_action, peer_from) end
 
-if msg_type == "election"
-  @election.send(msg_action, peer_from)
-end
-=end
       if msg == Election::MSG_ELECTION then @election.msg_election(peer_from) end
       if msg == Election::MSG_MASTER then @election.msg_master(peer_from) end
       if msg == Election::MSG_ALIVE then @election.msg_alive(peer_from) end
-
 
     end
   end

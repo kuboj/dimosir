@@ -31,7 +31,7 @@ require("#{File.expand_path(File.dirname(__FILE__))}/lib/trollop")
 opts = Cmd.parse_argv
 
 # init
-logger    = SimpleLogger.new(opts[:log_level], %w(sender))
+logger    = SimpleLogger.new(opts[:log_level], %w(sender listener))
 db        = Db.new(logger)
 
 peer_self = db.get_peer(opts[:ip], opts[:port])
