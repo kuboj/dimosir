@@ -41,18 +41,23 @@ class Db
     peer_self = nil
 
     if peers.count == 0
-      log(SimpleLogger::DEBUG, "Peer id not in db, adding.")
+      log(DEBUG, "Peer id not in db, adding.")
       peer_self = add_peer(ip, port)
-      log(SimpleLogger::DEBUG, "Peer: #{peer_self.id}")
+      log(DEBUG, "Peer: #{peer_self.id}")
     elsif peers.count == 1
       peer_self = peers[0]
-      log(SimpleLogger::DEBUG, "Peer found in db: #{peer_self.id}")
+      log(DEBUG, "Peer found in db: #{peer_self.id}")
     else # peers.count > 1
-      log(SimpleLogger::WARNING, "Multiple peers with ip #{ip} and port #{port} found. taking first")
+      log(WARNING, "Multiple peers with ip #{ip} and port #{port} found. taking first")
       peer_self = peers[0]
     end
 
     return peer_self
+  end
+
+  def del_peer(peer)
+    log(DEBUG, "Removing #{peer.info} from db")
+    peer.delete
   end
 
 end

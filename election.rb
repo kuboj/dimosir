@@ -26,8 +26,8 @@ class Election
   end
 
   def start_election
-    @election_running.synchronize do
-      log(DEBUG, "start_election")
+    if @election_running.try_lock
+      log(INFO, "Starting election")
 
       raise NoMethodError, "no :on_new_master Proc given" if @on_new_master.nil?
 
@@ -50,7 +50,8 @@ class Election
         all_peers = @db.get_all_peers # including myself therefore msg_master will be called by myself
         all_peers.each { |peer| @sender.send_msg(peer, MSG_MASTER) }
       end
-
+    else
+      log(DEBUG, "election already running")
     end
   end
 
