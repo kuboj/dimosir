@@ -1,6 +1,6 @@
 module Dimosir
 
-  class DimosirKernel
+  class Kernel
 
     include Loggable
 

@@ -8,7 +8,7 @@ require "bundler/setup"
 require_relative "loggable"
 require_relative "cmd"
 require_relative "db"
-require_relative "dimosir_kernel"
+require_relative "kernel"
 require_relative "election"
 require_relative "input_reader"
 require_relative "listener"
@@ -16,7 +16,7 @@ require_relative "peer"
 require_relative "pool"
 require_relative "sender"
 require_relative "simple_logger"
-require_relative "../trollop"
+require_relative "../trollop/trollop"
 
 module Dimosir
 
@@ -33,16 +33,16 @@ module Dimosir
       opts = Cmd.parse_argv
 
       # init
-      logger    = SimpleLogger.new(opts[:log_level], %w(sender listener))
-      db        = Db.new(logger)
+      logger    = Dimosir::SimpleLogger.new(opts[:log_level], %w(sender listener))
+      db        = Dimosir::Db.new(logger)
 
       peer_self = db.get_peer(opts[:ip], opts[:port])
 
-      sender    = Sender.new(logger, peer_self)
-      election  = Election.new(logger, db, sender, peer_self)
-      kernel    = DimosirKernel.new(logger, db, sender, peer_self, election)
-      listener  = Listener.new(logger, opts[:port], kernel)
-      reader    = InputReader.new(logger, sender)
+      sender    = Dimosir::Sender.new(logger, peer_self)
+      election  = Dimosir::Election.new(logger, db, sender, peer_self)
+      kernel    = Dimosir::Kernel.new(logger, db, sender, peer_self, election)
+      listener  = Dimosir::Listener.new(logger, opts[:port], kernel)
+      reader    = Dimosir::InputReader.new(logger, sender)
 
       # start listener
       lt = Thread.new do
