@@ -10,6 +10,7 @@
 #               thread pool - max num of worker threads
 # TODO: log file
 # TODO: RuntimeError - if cannot connect db ...
+# TODO: parameters checking on input
 
 require "rubygems"
 require "bundler/setup"

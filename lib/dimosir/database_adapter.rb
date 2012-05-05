@@ -7,15 +7,18 @@ module Dimosir
 
     include Loggable
 
-    @logger
-
     def initialize(l)
-      @logger = l
+      set_logger(l)
 
       # TODO: ext. parameters - from config file / input ...
-      MongoMapper.connection = Mongo::Connection.new("127.0.0.1")
-      MongoMapper.database = "test"
-      MongoMapper.connection["test"].authenticate("admin", "admin")
+      begin
+        MongoMapper.connection = Mongo::Connection.new("127.0.0.1")
+        MongoMapper.database = "test"
+        MongoMapper.connection["test"].authenticate("admin", "admin")
+      rescue => e
+        log(ERROR, "Error connecting to mongo. Error msg: #{e.message}")
+        exit 1
+      end
     end
 
     def get_all_peers

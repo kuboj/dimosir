@@ -9,7 +9,6 @@ module Dimosir
     @peer_self
     @peer_master
 
-    @logger
     @db
     @sender
     @election
@@ -31,7 +30,8 @@ module Dimosir
     SLAVE_WAIT_TIME = 1
 
     def initialize(l, d, s, p, e)
-      @logger     = l
+      set_logger(l)
+
       @db         = d
       @sender     = s
       @peer_self  = p

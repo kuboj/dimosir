@@ -6,7 +6,6 @@ module Dimosir
   class Task
 
     include MongoMapper::Document
-    include Loggable
 
     set_collection_name "tasks"
 

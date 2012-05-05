@@ -6,13 +6,11 @@ module Dimosir
 
     include Loggable
 
-    @logger
     @peer_sender
 
     def initialize(l, p)
-      # TODO: parameters check
+      set_logger(l)
 
-      @logger = l
       @peer_sender = p
     end
 

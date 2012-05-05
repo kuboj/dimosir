@@ -6,13 +6,13 @@ module Dimosir
 
     include Loggable
 
-    @logger
     @port
     @router
     @server
 
     def initialize(l, p, r)
-      @logger = l
+      set_logger(l)
+
       @port = p
       @router = r
     end

@@ -7,7 +7,9 @@ module Dimosir
     @size
     @jobs
 
-    def initialize(size)
+    def initialize(l, size)
+      set_logger(l)
+
       @size = size
       @jobs = Queue.new
 

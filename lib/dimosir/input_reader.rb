@@ -4,11 +4,11 @@ module Dimosir
 
     include Loggable
 
-    @logger
     @sender
 
     def initialize(l, s)
-      @logger = l
+      set_logger(l)
+
       @sender = s
     end
 

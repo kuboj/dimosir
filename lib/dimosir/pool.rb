@@ -4,8 +4,6 @@ module Dimosir
 
   class Task
 
-    include Loggable
-
     attr_accessor :last_run
     attr_reader :periodicity
     attr_reader :script_filename

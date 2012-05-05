@@ -10,7 +10,6 @@ module Dimosir
 
     WAIT_TIME = 3
 
-    @logger
     @db
     @sender
     @peer_self
@@ -19,7 +18,8 @@ module Dimosir
     attr_accessor :on_new_master  # called when msg_master received, param: new_master
 
     def initialize(l, d, s, p)
-      @logger           = l
+      set_logger(l)
+
       @db               = d
       @sender           = s
       @peer_self        = p
