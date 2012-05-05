@@ -38,6 +38,7 @@ module Dimosir
 
       @pool.map(&:join)
     end
+
   end
 
 end

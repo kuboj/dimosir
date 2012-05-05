@@ -39,38 +39,42 @@ module Dimosir
     end
 
     def run
-      # parse commandline arguments
-      opts      = Cmd.parse_argv
+      begin
+        # parse commandline arguments
+        opts      = Cmd.parse_argv
 
-      # init
-      logger    = SimpleLogger.new(opts[:log_level], %w(sender listener))
-      db        = DatabaseAdapter.new(logger)
+        # init
+        logger    = SimpleLogger.new(opts[:log_level], %w(sender listener))
+        db        = DatabaseAdapter.new(logger)
 
-      peer_self = db.get_peer(opts[:ip], opts[:port])
+        peer_self = db.get_peer(opts[:ip], opts[:port])
 
-      sender    = Sender.new(logger, peer_self)
-      election  = Election.new(logger, db, sender, peer_self)
-      kernel    = Kernel.new(logger, db, sender, peer_self, election)
-      listener  = Listener.new(logger, opts[:port], kernel)
-      reader    = InputReader.new(logger, sender)
+        sender    = Sender.new(logger, peer_self)
+        election  = Election.new(logger, db, sender, peer_self)
+        kernel    = Kernel.new(logger, db, sender, peer_self, election)
+        listener  = Listener.new(logger, opts[:port], kernel)
+        reader    = InputReader.new(logger, sender)
 
-      # start listener
-      lt = Thread.new do
-        listener.start
+        # start listener
+        lt = Thread.new do
+          listener.start
+        end
+
+        # start input reader
+        rt = Thread.new do
+          reader.start
+        end
+
+        kernel.start
+
+        # wait for threads
+        lt.join
+        rt.join
+
+        puts "Exit."
+      rescue RuntimeError => e
+        exit 1
       end
-
-      # start input reader
-      rt = Thread.new do
-        reader.start
-      end
-
-      kernel.start
-
-      # wait for threads
-      lt.join
-      rt.join
-
-      puts "Exit."
     end
 
   end

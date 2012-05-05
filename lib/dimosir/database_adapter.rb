@@ -17,7 +17,7 @@ module Dimosir
         MongoMapper.connection["test"].authenticate("admin", "admin")
       rescue => e
         log(ERROR, "Error connecting to mongo. Error msg: #{e.message}")
-        exit 1
+        raise RuntimeError
       end
     end
 
