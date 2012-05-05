@@ -4,7 +4,9 @@ require "bson"
 module Dimosir
 
   class Peer
+
     include MongoMapper::Document
+    include Loggable
 
     set_collection_name "peers"
 

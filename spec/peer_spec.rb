@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Peer do
+describe Dimosir::Peer do
 
   #before :all do
   #  MongoMapper.connection = Mongo::Connection.new("127.0.0.1")
@@ -11,12 +11,12 @@ describe Peer do
   describe "#new" do
 
     it "creates new empty peer" do
-      p = Peer.new
-      p.should be_instance_of Peer
+      p = Dimosir::Peer.new
+      p.should be_instance_of Dimosir::Peer
     end
 
     it "cannot save peer without ip or port given" do
-      p = Peer.new(:ip => "172.168.86.1")
+      p = Dimosir::Peer.new(:ip => "172.168.86.1")
       p.save.should eql false
     end
 
@@ -24,7 +24,7 @@ describe Peer do
       ip = "172.168.86.1"
       port = 10000
       id = "kviiik?"
-      p = Peer.new(:ip => ip, :port => port, :id => id)
+      p = Dimosir::Peer.new(:ip => ip, :port => port, :id => id)
 
       p.ip.should eql ip
       p.port.should eql port
@@ -41,7 +41,7 @@ describe Peer do
   describe "::new_from_json" do
 
     it "cannot create object from malformed json" do
-      lambda { p = Peer.new_from_json("") }.should raise_exception ArgumentError
+      lambda { p = Dimosir::Peer.new_from_json("") }.should raise_exception ArgumentError
     end
 
   end
@@ -49,7 +49,7 @@ describe Peer do
   describe "#<" do
 
     it "evaluates peer1 to be less than peer2 if peer1 was created sooner" do
-      (Peer.new() < Peer.new()).should be_true
+      (Dimosir::Peer.new() < Dimosir::Peer.new()).should be_true
     end
 
   end
@@ -57,7 +57,7 @@ describe Peer do
   describe "#>" do
 
     it "evaluates peer1 with id 2 to be more than peer 2 with id 1" do
-      (Peer.new(:id => 2) > Peer.new(:id => 1)).should be_true
+      (Dimosir::Peer.new(:id => 2) > Dimosir::Peer.new(:id => 1)).should be_true
     end
 
   end
@@ -65,14 +65,14 @@ describe Peer do
   describe "#==" do
 
     it "compares two peers for equality" do
-      p1 = Peer.new(:ip => "1.1.1.1", :port => 10000, :id => "1")
-      p2 = Peer.new(:ip => "1.1.1.2", :port => 20000, :id => "1")
+      p1 = Dimosir::Peer.new(:ip => "1.1.1.1", :port => 10000, :id => "1")
+      p2 = Dimosir::Peer.new(:ip => "1.1.1.2", :port => 20000, :id => "1")
       (p1 == p2).should be_true
     end
 
     it "compares two peers for inequality" do
-      p1 = Peer.new(:ip => "1.1.1.1", :port => 10000, :id => "1")
-      p2 = Peer.new(:ip => "1.1.1.2", :port => 20000, :id => "2")
+      p1 = Dimosir::Peer.new(:ip => "1.1.1.1", :port => 10000, :id => "1")
+      p2 = Dimosir::Peer.new(:ip => "1.1.1.2", :port => 20000, :id => "2")
       (p1 != p2).should be_true
     end
 
@@ -83,7 +83,7 @@ describe Peer do
     it "returns formatted address and id of peer" do
       ip = "172.168.86.1"
       port = 10000
-      p = Peer.new(:ip => ip, :port => port)
+      p = Dimosir::Peer.new(:ip => ip, :port => port)
 
       p.info.should eql "[#{ip}:#{port} #{p.id.to_s}]"
     end

@@ -1,4 +1,4 @@
-require_relative "../loggable"
+require_relative "../lib/dimosir/loggable"
 
-require_relative "../peer"
-require_relative "../election"
+require_relative "../lib/dimosir/peer"
+require_relative "../lib/dimosir/election"

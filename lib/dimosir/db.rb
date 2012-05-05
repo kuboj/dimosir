@@ -3,13 +3,12 @@ require "bson"
 
 module Dimosir
 
-  class Db
+  class DatabaseAdapter
 
     include Loggable
 
     @logger
 
-    # TODO: db config on input (saved in /etc/dmsir.conf)
     def initialize(l)
       @logger = l
 
@@ -54,7 +53,7 @@ module Dimosir
         peer_self = peers[0]
       end
 
-      return peer_self
+      peer_self
     end
 
     def del_peer(peer)

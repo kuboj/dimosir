@@ -1,14 +1,14 @@
 require "spec_helper"
 require "rspec/mocks"
 
-describe Election do
+describe Dimosir::Election do
 
   before :each do
     @logger = double("logger")
     @db = double("logger")
     @sender = double("sender")
     @peer_self = double("peer_self")
-    @election = Election.new(@logger, @db, @sender, @peer_self)
+    @election = Dimosir::Election.new(@logger, @db, @sender, @peer_self)
   end
 
   describe "#new" do
@@ -18,7 +18,7 @@ describe Election do
       db = double("logger")
       sender = double("sender")
       peer_self = double("peer_self")
-      election = Election.new(logger, db, sender, peer_self)
+      election = Dimosir::Election.new(logger, db, sender, peer_self)
     end
 
   end
@@ -31,12 +31,13 @@ describe Election do
 
       @election.should_receive(:msg_election).once
 
-      @election.send(Election::MSG_ELECTION.split(".").last, peer_from)
+      @election.send(Dimosir::Election::MSG_ELECTION.split(".").last, peer_from)
     end
 
     it "logs received message" do
       peer_from = double("peer")
       peer_from.stub(:info => "mocked peer_from")
+      peer_from.stub(:<).and_return(false)
 
       @logger.should_receive(:llog).once
 
