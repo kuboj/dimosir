@@ -33,9 +33,7 @@ module Dimosir
 
     def self.get_log_levels_str
       str = "Logging level. Possible values: "
-      self.constants.each do |c|
-        str += "#{self.const_get(c)} - #{c.id2name.downcase}, "
-      end
+      self.constants.each { |c| str += "#{self.const_get(c)} - #{c.id2name.downcase}, " }
 
       return str
     end

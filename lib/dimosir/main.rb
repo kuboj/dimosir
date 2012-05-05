@@ -2,14 +2,14 @@
 # TODO: init.d/upstart script
 # TODO: daemonize
 # TODO: communication with daemon - add/del/reload tasks, start/stop/restart
-# TODO: thread checking network connection. if down, then kill itself
+# TODO: new thread checking network connection. if down, then kill itself
 # TODO: config file
 #               db - host, name, collection, user, password
 #               connection - self ip, port
 #               log level, log file
+#               thread pool - max num of worker threads
 # TODO: log file
-# TODO: RuntimeError - if cannot connect to db ...
-# TODO: thread watching network
+# TODO: RuntimeError - if cannot connect db ...
 
 require "rubygems"
 require "bundler/setup"
@@ -39,19 +39,19 @@ module Dimosir
 
     def run
       # parse commandline arguments
-      opts = Cmd.parse_argv
+      opts      = Cmd.parse_argv
 
       # init
-      logger    = Dimosir::SimpleLogger.new(opts[:log_level], %w(sender listener))
-      db        = Dimosir::DatabaseAdapter.new(logger)
+      logger    = SimpleLogger.new(opts[:log_level], %w(sender listener))
+      db        = DatabaseAdapter.new(logger)
 
       peer_self = db.get_peer(opts[:ip], opts[:port])
 
-      sender    = Dimosir::Sender.new(logger, peer_self)
-      election  = Dimosir::Election.new(logger, db, sender, peer_self)
-      kernel    = Dimosir::Kernel.new(logger, db, sender, peer_self, election)
-      listener  = Dimosir::Listener.new(logger, opts[:port], kernel)
-      reader    = Dimosir::InputReader.new(logger, sender)
+      sender    = Sender.new(logger, peer_self)
+      election  = Election.new(logger, db, sender, peer_self)
+      kernel    = Kernel.new(logger, db, sender, peer_self, election)
+      listener  = Listener.new(logger, opts[:port], kernel)
+      reader    = InputReader.new(logger, sender)
 
       # start listener
       lt = Thread.new do
