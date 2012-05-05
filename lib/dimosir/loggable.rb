@@ -8,7 +8,8 @@ module Dimosir
     ERROR   = 4
 
     def log(priority, msg)
-      @logger.llog(priority, self.class.name, msg)
+      class_name = self.class.name.split("::").last
+      @logger.llog(priority, class_name, msg)
     end
 
   end

@@ -1,3 +1,5 @@
+# TODO: class role -> master, slave
+
 module Dimosir
 
   class Kernel
@@ -29,19 +31,20 @@ module Dimosir
     SLAVE_WAIT_TIME = 1
 
     def initialize(l, d, s, p, e)
-      @logger = l
-      @db = d
-      @sender = s
-      @peer_self = p
-      @election = e
+      @logger     = l
+      @db         = d
+      @sender     = s
+      @peer_self  = p
+      @election   = e
 
-      @master_thread = nil
-      @alive_peers = nil
-      @alive_peers_mutex = Mutex.new
+      @master_thread      = nil
+      @alive_peers        = nil
+      @alive_peers_mutex  = Mutex.new
 
       @slave_thread = nil
-      @last_pinged = 0
+      @last_pinged  = 0
 
+      # set handler for election results
       @election.on_new_master = Proc.new do |new_master|
         if @peer_self == new_master
           if @peer_master == new_master
@@ -56,6 +59,7 @@ module Dimosir
             become_slave
           else
             log(INFO, "New master is #{new_master.info}")
+            become_slave if @slave_thread.nil?
           end
         end
 
@@ -64,8 +68,7 @@ module Dimosir
     end
 
     def start
-      Thread.new { @election.start_election }
-      # wait and then become a slave / master
+      Thread.new { @election.start_election } # result will determine role - slave/master
     end
 
     def consume_message(peer_from, msg)
