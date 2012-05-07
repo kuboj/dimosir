@@ -12,7 +12,7 @@ module Dimosir
 
       # TODO: ext. parameters - from config file / input ...
       begin
-        MongoMapper.connection = Mongo::Connection.new("127.0.0.1")
+        MongoMapper.connection = Mongo::Connection.new("1127.0.0.1")
         MongoMapper.database = "test"
         MongoMapper.connection["test"].authenticate("admin", "admin")
       rescue => e
