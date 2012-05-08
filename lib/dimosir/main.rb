@@ -32,27 +32,29 @@ module Dimosir
 
   class Main
 
+    @opts
+
     def initialize
       # config
       #$DEBUG = true
       Thread.abort_on_exception = true
+
+      # parse commandline arguments
+      @opts = Cmd.parse_argv
     end
 
     def run
       begin
-        # parse commandline arguments
-        opts      = Cmd.parse_argv
-
         # init
-        logger    = SimpleLogger.new(opts[:log_level], %w(sender listener))
+        logger    = SimpleLogger.new(@opts[:log_level], %w(sender listener))
         db        = DatabaseAdapter.new(logger)
 
-        peer_self = db.get_peer(opts[:ip], opts[:port])
+        peer_self = db.get_peer(@opts[:ip], @opts[:port])
 
         sender    = Sender.new(logger, peer_self)
         election  = Election.new(logger, db, sender, peer_self)
         kernel    = Kernel.new(logger, db, sender, peer_self, election)
-        listener  = Listener.new(logger, opts[:port], kernel)
+        listener  = Listener.new(logger, @opts[:port], kernel)
         reader    = InputReader.new(logger, sender)
 
         # start listener

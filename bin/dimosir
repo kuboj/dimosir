@@ -1,6 +1,10 @@
 #!/usr/bin/env ruby
 
+#require "daemons"
 require_relative "../lib/dimosir/main"
+
+#Daemons.daemonize
 
 main = Dimosir::Main.new
 main.run
+
