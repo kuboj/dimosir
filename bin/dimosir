@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-#require "daemons"
+require "daemons"
 require_relative "../lib/dimosir/main"
 
 #Daemons.daemonize

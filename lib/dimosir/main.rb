@@ -64,7 +64,7 @@ module Dimosir
 
         # start input reader
         rt = Thread.new do
-          reader.start
+          #reader.start
         end
 
         kernel.start

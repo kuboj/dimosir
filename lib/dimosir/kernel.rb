@@ -127,7 +127,7 @@ module Dimosir
     end
 
     def handle_ping(peer_from)
-      log(DEBUG, "pinged.")
+      log(DEBUG, "pinged by #{peer_from.info}.")
       @last_pinged = Time.now.to_i
       @sender.send_msg(peer_from, MSG_PONG)
     end
