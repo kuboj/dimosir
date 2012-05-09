@@ -11,6 +11,7 @@
 # TODO: log file
 # TODO: RuntimeError - if cannot connect db ...
 # TODO: parameters checking on input
+# TODO: use standard Logger instead of custom SimpleLogger
 
 require "rubygems"
 require "bundler/setup"

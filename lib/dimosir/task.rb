@@ -7,11 +7,14 @@ module Dimosir
 
     include MongoMapper::Document
 
-    set_collection_name "tasks"
+    set_collection_name "checks"
 
-    key :script,    String, :required => true
-    key :label,     String, :required => true
-    key :arguments, String, :default => ""
+    key :label,       String, :required => true
+    key :target_host, String, :required => true
+    key :check,       String, :required => true
+    key :arguments,   Hash,   :default => {}
+    belongs_to :peer
+    key :peer_id,     ObjectId
 
     safe
     timestamps!

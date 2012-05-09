@@ -1,3 +1,4 @@
+daemons.rb.pid
 .idea
 doc 
-Gemfile.lock
+log

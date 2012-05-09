@@ -4,6 +4,9 @@ module Dimosir
 
   class ThreadPool
 
+    include Loggable
+
+    @pool
     @size
     @jobs
 
@@ -27,13 +30,17 @@ module Dimosir
       end
     end
 
-    def schedule(*args, &block)
-      @jobs << [block, args]
+    #def schedule(*args, &block)
+    #  @jobs << [block, args]
+    #end
+
+    def schedule(proc)
+      @jobs << proc
     end
 
     def shutdown
       @size.times do
-        schedule { throw :exit }
+        schedule Proc.new { throw :exit }
       end
 
       @pool.map(&:join)

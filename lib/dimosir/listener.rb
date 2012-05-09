@@ -19,19 +19,17 @@ module Dimosir
 
     def start
       @server = TCPServer.open(@port)
-      log(INFO, "Listening on #{@port}")
+      log(INFO, "Listening on #@port")
       loop do
         Thread.new(@server.accept) do |connection|
-          log(DEBUG, "Accepting connection from: #{connection.peeraddr[2]} on local port #{@port}")
+          log(DEBUG, "Accepting connection from: #{connection.peeraddr[2]} on local port #@port")
 
           begin
             # TODO: constant DELIMITER
             data = connection.gets("\0")
-            if data != nil
-              data.chomp!
-              if data[-1] == "\0"
-                data.chop!
-              end
+            unless data.nil?
+              data.chomp! # removes \n \r ...
+              data.chop! if data[-1] == "\0" # removes last character
             end
 
             log(DEBUG, "raw message: #{data}")

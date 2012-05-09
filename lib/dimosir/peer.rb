@@ -11,6 +11,7 @@ module Dimosir
 
     key :ip,    String,   :required => true
     key :port,  Integer,  :required => true
+    many :tasks
 
     safe
     timestamps!
