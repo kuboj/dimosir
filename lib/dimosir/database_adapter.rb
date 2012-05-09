@@ -69,6 +69,10 @@ module Dimosir
       peer.tasks
     end
 
+    def get_all_tasks
+      Task.all
+    end
+
   end
 
 end

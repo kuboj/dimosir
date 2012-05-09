@@ -15,12 +15,12 @@ describe Dimosir::Check::Ping do
 
     it "pings localhost with default values" do
       p = Dimosir::Check::Ping.new("test", "localhost", {})
-      p.perform_check.should eql 0
+      p.perform_check[1].should eql 0
     end
 
     it "pings google.com 3 times" do
       p = Dimosir::Check::Ping.new("pinging google", "google.com", {"-c" => 3})
-      p.perform_check.should eql 0
+      p.perform_check[1].should eql 0
     end
 
   end

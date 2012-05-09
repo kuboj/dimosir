@@ -27,6 +27,7 @@ require_relative "simple_logger"
 require_relative "task"
 require_relative "peer"
 require_relative "job"
+require_relative "task_scheduler"
 
 require_relative "thread_pool"
 require_relative "../trollop/trollop"

@@ -143,6 +143,8 @@ module Dimosir
       log(INFO, "Dropping #{peer.info}")
       # RM from DB, redistribute jobs
 
+      tasks = peer.get_tasks
+      tasks.each { |t| t.peer = nil; t.save }
       @db.del_peer(peer)
     end
 
