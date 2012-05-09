@@ -12,6 +12,7 @@ module Dimosir
     end
 
     def reschedule_all
+      log(DEBUG, "Rescheduling all")
       tasks = @db.get_all_tasks
       peers = @db.get_all_peers
       i = 0
