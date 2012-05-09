@@ -28,6 +28,8 @@ require_relative "simple_logger"
 require_relative "task"
 require_relative "thread_pool"
 require_relative "../trollop/trollop"
+require_relative "check/abstract_check"
+require_relative "check/ping"
 
 module Dimosir
 

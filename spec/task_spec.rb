@@ -20,7 +20,6 @@ describe Dimosir::Task do
                             })
       t.should be_instance_of Dimosir::Task
       t.save.should eql true
-      t.
     end
 
     it "won't create task with missing fields" do
