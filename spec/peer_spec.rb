@@ -2,11 +2,16 @@ require "spec_helper"
 
 describe Dimosir::Peer do
 
-  #before :all do
-  #  MongoMapper.connection = Mongo::Connection.new("127.0.0.1")
-  #  MongoMapper.database = "rspec"
-  #  MongoMapper.connection["rspec"].authenticate("rspec", "rspec")
-  #end
+  before :all do
+    MongoMapper.connection = Mongo::Connection.new("127.0.0.1")
+    MongoMapper.database = "rspec"
+    MongoMapper.connection["rspec"].authenticate("rspec", "rspec")
+    peers = Dimosir::Peer.all
+    peers.each { |p| p.destroy } unless peers.nil?
+
+    tasks = Dimosir::Task.all
+    tasks.each { |t| t.destroy } unless tasks.nil?
+  end
 
   describe "#new" do
 
@@ -31,10 +36,10 @@ describe Dimosir::Peer do
       p.id.to_s.should eql id
     end
 
-    #it "creates peer correctly" do
-    #  p = Peer.new(:ip => "172.168.86.1", :port => 10000)
-    #  p.save.should eql true
-    #end
+    it "creates peer correctly" do
+      p = Dimosir::Peer.new(:ip => "172.168.86.1", :port => 10000)
+      p.save.should eql true
+    end
 
   end
 
@@ -86,6 +91,33 @@ describe Dimosir::Peer do
       p = Dimosir::Peer.new(:ip => ip, :port => port)
 
       p.info.should eql "[#{ip}:#{port} #{p.id.to_s}]"
+    end
+
+  end
+
+  describe "#get_tasks" do
+
+    it "returns no tasks" do
+      ip = "172.168.86.1"
+      port = 10000
+      p = Dimosir::Peer.new(:ip => ip, :port => port)
+      p.save
+      p.tasks.size.should eql 0
+    end
+
+    it "returns 1 newly created tasks" do
+      ip = "172.168.86.1"
+      port = 10000
+      p = Dimosir::Peer.create(:ip => ip, :port => port)
+      t1 = Dimosir::Task.create(
+        :label => "task1",
+        :target_host => "localhost",
+        :check => "ping",
+        :peer => p,
+        :periodicity => 10
+      )
+
+      p.tasks[0].should eql t1
     end
 
   end

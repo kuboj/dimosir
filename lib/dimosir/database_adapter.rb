@@ -64,6 +64,11 @@ module Dimosir
       peer.delete
     end
 
+    def get_tasks(peer)
+      peer.reload
+      peer.tasks
+    end
+
   end
 
 end

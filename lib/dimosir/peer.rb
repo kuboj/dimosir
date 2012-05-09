@@ -9,9 +9,9 @@ module Dimosir
 
     set_collection_name "peers"
 
-    key :ip,    String,   :required => true
-    key :port,  Integer,  :required => true
-    many :tasks
+    key :ip,      String,   :required => true
+    key :port,    Integer,  :required => true
+    many :tasks,  :class_name => "Dimosir::Task"
 
     safe
     timestamps!
@@ -29,6 +29,11 @@ module Dimosir
       else
         raise ArgumentError, "Invalid json, values missing - #{json}"
       end
+    end
+
+    def get_tasks
+      reload
+      tasks
     end
 
     def info
