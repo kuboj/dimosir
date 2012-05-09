@@ -2,14 +2,6 @@ require "spec_helper"
 
 describe Dimosir::Task do
 
-  before :all do
-    MongoMapper.connection = Mongo::Connection.new("127.0.0.1")
-    MongoMapper.database = "rspec"
-    MongoMapper.connection["rspec"].authenticate("rspec", "rspec")
-    tasks = Dimosir::Task.all
-    tasks.each { |t| t.destroy } unless tasks.nil?
-  end
-
   describe "#new" do
 
     it "creates new empty task" do
@@ -45,5 +37,24 @@ describe Dimosir::Task do
     end
 
   end
+
+  describe "#generate_job" do
+
+    it "creates new job" do
+      t = Dimosir::Task.create({
+        :label => "testing task3",
+        :target_host => "host",
+        :check => "ping",
+        :periodicity => 60
+      })
+
+      p = Dimosir::Peer.create({:ip => "1.1.1.1", :port => 10000})
+
+      job = t.generate_job(p)
+      job.task.should eql t
+    end
+
+  end
+
 
 end

@@ -26,7 +26,10 @@ module Dimosir
     def start_generating
       loop do
         @tasks.each do |task, last_run|
-          task.generate_job(peer_self) if Time.now.to_i - last_run > task.periodicity
+          if Time.now.to_i - last_run > task.periodicity
+            log(DEBUG, "Generating job for task #{task.label}")
+            task.generate_job(peer_self)
+          end
         end
 
         sleep(sleep_time)
@@ -38,16 +41,20 @@ module Dimosir
       tasks_old = @tasks
       tasks_old_str = ""
       tasks_old.each { |task| tasks_old_str += "#{task.label}, " }
+      log(DEBUG, "Old tasks: #{tasks_old_str}")
       tasks_new = {}
 
       tasks_new_raw = @db.get_tasks(@peer_self)
+      tasks_new_str = ""
       tasks_new_raw.each do |task|
+        tasks_old_str += "#{task.label}, "
         if tasks_old.key_exists?(task)
           tasks_new[task] = tasks_old[task]
         else
           tasks_new[task] = 0 # task was never run
         end
       end
+      log(DEBUG, "New tasks: #{tasks_new_str}")
 
       @tasks_mutex.synchronize { @tasks = tasks_new }
     end

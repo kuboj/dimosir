@@ -1,6 +1,3 @@
-require "mongo_mapper"
-require "bson"
-
 module Dimosir
 
   class Task
@@ -15,12 +12,21 @@ module Dimosir
     key :arguments,   Hash,     :default  => {}
     key :periodicity, Integer,  :required => true
     belongs_to :peer, :class_name => "Dimosir::Peer"
+    many :jobs, :class_name => "Dimosir::Job"
 
     safe
     timestamps!
 
     def generate_job(peer_for)
+      j = Job.new({
+        :task_label => @label,
+        :task => self,
+        :peer => peer_for
+      })
 
+      j.save
+      reload
+      j
     end
 
   end

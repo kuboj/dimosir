@@ -10,7 +10,7 @@ module Dimosir
         output = `ping  #{arg_string} #@target_host`
         retval = $?.exitstatus
 
-        retval
+        [output, retval]
       end
 
     end

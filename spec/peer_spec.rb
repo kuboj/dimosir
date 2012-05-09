@@ -2,17 +2,6 @@ require "spec_helper"
 
 describe Dimosir::Peer do
 
-  before :all do
-    MongoMapper.connection = Mongo::Connection.new("127.0.0.1")
-    MongoMapper.database = "rspec"
-    MongoMapper.connection["rspec"].authenticate("rspec", "rspec")
-    peers = Dimosir::Peer.all
-    peers.each { |p| p.destroy } unless peers.nil?
-
-    tasks = Dimosir::Task.all
-    tasks.each { |t| t.destroy } unless tasks.nil?
-  end
-
   describe "#new" do
 
     it "creates new empty peer" do
