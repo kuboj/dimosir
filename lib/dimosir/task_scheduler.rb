@@ -8,6 +8,7 @@ module Dimosir
       set_logger(l)
     end
 
+    # TODO: intelligent reschedule !
     def reschedule(peers, tasks)
       log(DEBUG, "Rescheduling tasks")
       i = 0
