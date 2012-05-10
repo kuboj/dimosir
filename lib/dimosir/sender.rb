@@ -14,7 +14,6 @@ module Dimosir
       @peer_sender = p
     end
 
-    # TODO: parameters-> Peer, String ?
     def send_msg(peer_to, msg)
       log(DEBUG, "#{@peer_sender.info} trying to send msg '#{msg}' to #{peer_to.info}")
 

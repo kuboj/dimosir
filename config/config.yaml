@@ -1,0 +1,13 @@
+---
+database:
+  host: localhost
+  port: 27017
+  db_name: test
+  user: admin
+  password: admin
+peer:
+  ip: 127.0.0.1
+  port: 10000
+logging:
+  log_file: dimosir.log
+  log_level: 1

@@ -25,9 +25,9 @@ module Dimosir
 
     MSG_TASK_UPDATE = "task.update"
 
+    # TODO: put these in app_config
     MASTER_PING_INTERVAL = 10
     MASTER_PONG_WAIT_TIME = 1
-
     SLAVE_PING_INTERVAL = 20
     SLAVE_WAIT_TIME = 1
 

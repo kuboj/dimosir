@@ -4,18 +4,19 @@ module Dimosir
 
     include Loggable
 
+    SLEEP_TIME = 1 # TODO: put this in app_config
+
     @db
     @tasks
 
     @tasks_mutex
 
-    def initialize(l, db, peer_self, sleep_time)
+    def initialize(l, db, peer_self)
       set_logger(l)
 
       @db           = db
       @peer_self    = peer_self
       @tasks_mutex  = Mutex.new
-      @sleep_time   = sleep_time
 
       @tasks        = {}
     end
@@ -37,7 +38,7 @@ module Dimosir
           end
         end
 
-        sleep(@sleep_time)
+        sleep(SLEEP_TIME)
       end
     end
 

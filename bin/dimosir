@@ -3,8 +3,10 @@
 require "daemons"
 require_relative "../lib/dimosir/main"
 
-#Daemons.daemonize
+#Daemons.run_proc("dimosird") do
+  main = Dimosir::Main.new(false)
+  main.run
+#end
 
-main = Dimosir::Main.new
-main.run
+#Daemons.daemonize
 

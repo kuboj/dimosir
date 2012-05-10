@@ -8,7 +8,7 @@ module Dimosir
     MSG_MASTER    = "election.msg_master"
     MSG_ALIVE     = "election.msg_alive"
 
-    WAIT_TIME = 3
+    WAIT_TIME     = 3 # TODO: put this in app_config
 
     @db
     @sender

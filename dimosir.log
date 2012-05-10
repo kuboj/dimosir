@@ -1,0 +1,10 @@
+[2012-05-10 23:05:31 +0200] [DEBUG] [SimpleLogger] - Logger initialized with logging threshold: DEBUG
+[2012-05-10 23:05:31 +0200] [DEBUG] [DatabaseAdapter] - Peer found in db: 4fab080f16b17c7b56000001
+[2012-05-10 23:05:31 +0200] [INFO] [Election] - Starting election
+[2012-05-10 23:05:31 +0200] [INFO] [JobGenerator] - Reloading tasks
+[2012-05-10 23:05:31 +0200] [DEBUG] [JobGenerator] - Old tasks: 
+[2012-05-10 23:08:50 +0200] [DEBUG] [SimpleLogger] - Logger initialized with logging threshold: DEBUG
+[2012-05-10 23:08:50 +0200] [DEBUG] [DatabaseAdapter] - Peer found in db: 4fab080f16b17c7b56000001
+[2012-05-10 23:08:50 +0200] [INFO] [Election] - Starting election
+[2012-05-10 23:08:50 +0200] [INFO] [JobGenerator] - Reloading tasks
+[2012-05-10 23:08:50 +0200] [DEBUG] [JobGenerator] - Old tasks: 

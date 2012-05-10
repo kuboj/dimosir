@@ -20,7 +20,6 @@ require_relative "cmd"
 require_relative "database_adapter"
 require_relative "kernel"
 require_relative "election"
-require_relative "input_reader"
 require_relative "listener"
 require_relative "sender"
 require_relative "simple_logger"
@@ -30,6 +29,7 @@ require_relative "job"
 require_relative "task_scheduler"
 require_relative "job_generator"
 require_relative "job_executor"
+require_relative "config"
 
 require_relative "thread_pool"
 require_relative "../trollop/trollop"
@@ -42,46 +42,45 @@ module Dimosir
 
     @opts
 
-    def initialize
+    def initialize(daemonized)
       # config
       #$DEBUG = true
       Thread.abort_on_exception = true
 
       # parse commandline arguments
-      @opts = Cmd.parse_argv
+      #@opts = Cmd.parse_argv
+      @opts = Config.parse_file("#{File.expand_path(File.dirname(__FILE__))}/../../config/config.yaml")
+      @opts["logging"]["log_file"] = "" if not daemonized
     end
 
     def run
       begin
         # init
-        logger        = SimpleLogger.new(@opts[:log_level], %w(sender listener))
-        db            = DatabaseAdapter.new(logger)
+        logger        = SimpleLogger.new(
+                          @opts["logging"]["log_level"],
+                          %w(sender listener),
+                          @opts["logging"]["log_file"]
+                        )
+        db            = DatabaseAdapter.new(
+                          logger,
+                          @opts["database"]["host"],
+                          @opts["database"]["port"],
+                          @opts["database"]["db_name"],
+                          @opts["database"]["user"],
+                          @opts["database"]["password"]
+                        )
         scheduler     = TaskScheduler.new(logger)
+        peer_self     = db.get_peer(@opts["peer"]["ip"], @opts["peer"]["port"])
 
-        peer_self     = db.get_peer(@opts[:ip], @opts[:port])
-
-        job_generator = JobGenerator.new(logger, db, peer_self, 1)
+        job_generator = JobGenerator.new(logger, db, peer_self)
         sender        = Sender.new(logger, peer_self)
         election      = Election.new(logger, db, sender, peer_self)
         kernel        = Kernel.new(logger, db, sender, peer_self, election, scheduler, job_generator)
-        listener      = Listener.new(logger, @opts[:port], kernel)
-        reader        = InputReader.new(logger, sender)
+        listener      = Listener.new(logger, @opts["peer"]["port"], kernel)
 
-        # start listener
-        lt = Thread.new do
-          listener.start
-        end
-
-        # start input reader
-        rt = Thread.new do
-          #reader.start
-        end
-
+        lt = Thread.new { listener.start }
         kernel.start
-
-        # wait for threads
         lt.join
-        rt.join
 
         puts "Exit."
       rescue RuntimeError => e

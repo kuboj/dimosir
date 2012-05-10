@@ -7,14 +7,13 @@ module Dimosir
 
     include Loggable
 
-    def initialize(l)
+    def initialize(l, db_host, db_port, db_name, db_user, db_password)
       set_logger(l)
 
-      # TODO: ext. parameters - from config file / input ...
       begin
-        MongoMapper.connection = Mongo::Connection.new("127.0.0.1")
-        MongoMapper.database = "test"
-        MongoMapper.connection["test"].authenticate("admin", "admin")
+        MongoMapper.connection = Mongo::Connection.new(db_host, db_port)
+        MongoMapper.database = db_name
+        MongoMapper.connection[db_name].authenticate(db_user, db_password)
       rescue => e
         log(ERROR, "Error connecting to mongo. Error msg: #{e.message}")
         raise RuntimeError
