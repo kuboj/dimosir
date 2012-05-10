@@ -1,4 +1,4 @@
-daemons.rb.pid
+*.pid
+*.log
 .idea
 doc 
-log

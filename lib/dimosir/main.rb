@@ -42,50 +42,49 @@ module Dimosir
 
     @opts
 
-    def initialize(daemonized)
+    def initialize(daemonized, config_file)
       # config
       #$DEBUG = true
       Thread.abort_on_exception = true
 
       # parse commandline arguments
       #@opts = Cmd.parse_argv
-      @opts = Config.parse_file("#{File.expand_path(File.dirname(__FILE__))}/../../config/config.yaml")
+      if config_file == "config/config.yaml"
+        config_file = "#{File.expand_path(File.dirname(__FILE__))}/../../config/config.yaml"
+      end
+      @opts = Config.parse_file(config_file)
       @opts["logging"]["log_file"] = "" if not daemonized
     end
 
     def run
-      begin
-        # init
-        logger        = SimpleLogger.new(
-                          @opts["logging"]["log_level"],
-                          %w(sender listener),
-                          @opts["logging"]["log_file"]
-                        )
-        db            = DatabaseAdapter.new(
-                          logger,
-                          @opts["database"]["host"],
-                          @opts["database"]["port"],
-                          @opts["database"]["db_name"],
-                          @opts["database"]["user"],
-                          @opts["database"]["password"]
-                        )
-        scheduler     = TaskScheduler.new(logger)
-        peer_self     = db.get_peer(@opts["peer"]["ip"], @opts["peer"]["port"])
+      # init
+      logger        = SimpleLogger.new(
+                        @opts["logging"]["log_level"],
+                        %w(sender listener),
+                        @opts["logging"]["log_file"]
+                      )
+      db            = DatabaseAdapter.new(
+                        logger,
+                        @opts["database"]["host"],
+                        @opts["database"]["port"],
+                        @opts["database"]["db_name"],
+                        @opts["database"]["user"],
+                        @opts["database"]["password"]
+                      )
+      scheduler     = TaskScheduler.new(logger)
+      peer_self     = db.get_peer(@opts["peer"]["ip"], @opts["peer"]["port"])
 
-        job_generator = JobGenerator.new(logger, db, peer_self)
-        sender        = Sender.new(logger, peer_self)
-        election      = Election.new(logger, db, sender, peer_self)
-        kernel        = Kernel.new(logger, db, sender, peer_self, election, scheduler, job_generator)
-        listener      = Listener.new(logger, @opts["peer"]["port"], kernel)
+      job_generator = JobGenerator.new(logger, db, peer_self)
+      sender        = Sender.new(logger, peer_self)
+      election      = Election.new(logger, db, sender, peer_self)
+      kernel        = Kernel.new(logger, db, sender, peer_self, election, scheduler, job_generator)
+      listener      = Listener.new(logger, @opts["peer"]["port"], kernel)
 
-        lt = Thread.new { listener.start }
-        kernel.start
-        lt.join
+      lt = Thread.new { listener.start }
+      kernel.start
+      lt.join
 
-        puts "Exit."
-      rescue RuntimeError => e
-        exit 1
-      end
+      puts "Exit."
     end
 
   end

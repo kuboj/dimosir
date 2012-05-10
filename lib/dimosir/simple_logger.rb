@@ -20,7 +20,7 @@ module Dimosir
       @modules_ignored = mi.map { |m| m.downcase }
       @logger = self
       if f != ""
-        @log_target = File.open(f, "a")
+        @log_target = File.open(f, "a+")
       else
         @log_target = STDERR
       end
@@ -32,6 +32,7 @@ module Dimosir
 
       # TODO smart indent in output
       @log_target.puts("[#{Time.now.to_s}] [#{@constants[priority]}] [#{who}] - #{msg}\n")
+      @log_target.flush
     end
 
     def self.get_log_levels_str

@@ -1,12 +1,9 @@
 #!/usr/bin/env ruby
 
-require "daemons"
 require_relative "../lib/dimosir/main"
+require_relative "../lib/dimosir/cmd"
 
-#Daemons.run_proc("dimosird") do
-  main = Dimosir::Main.new(false)
-  main.run
-#end
-
-#Daemons.daemonize
+opts = Dimosir::Cmd.parse_argv
+main = Dimosir::Main.new(false, opts[:config_file])
+main.run
 

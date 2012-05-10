@@ -9,5 +9,5 @@ peer:
   ip: 127.0.0.1
   port: 10000
 logging:
-  log_file: dimosir.log
+  log_file: /home/bubo/RubymineProjects/bac1/dimosir.log
   log_level: 1

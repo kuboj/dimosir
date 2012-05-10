@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+require "daemons"
+require_relative "../lib/dimosir/main"
+
+Daemons.run_proc("dimosird") do
+  main = Dimosir::Main.new(true, "config/config.yaml")
+  main.run
+end
+
