@@ -30,12 +30,8 @@ module Dimosir
       end
     end
 
-    #def schedule(*args, &block)
-    #  @jobs << [block, args]
-    #end
-
-    def schedule(proc)
-      @jobs << proc
+    def schedule(*args, proc)
+      @jobs << [proc, args]
     end
 
     def shutdown
