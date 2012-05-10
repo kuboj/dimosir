@@ -28,6 +28,8 @@ require_relative "task"
 require_relative "peer"
 require_relative "job"
 require_relative "task_scheduler"
+require_relative "job_generator"
+require_relative "job_executor"
 
 require_relative "thread_pool"
 require_relative "../trollop/trollop"
@@ -52,16 +54,18 @@ module Dimosir
     def run
       begin
         # init
-        logger    = SimpleLogger.new(@opts[:log_level], %w(sender listener))
-        db        = DatabaseAdapter.new(logger)
+        logger        = SimpleLogger.new(@opts[:log_level], %w(sender listener))
+        db            = DatabaseAdapter.new(logger)
+        scheduler     = TaskScheduler.new(logger)
 
-        peer_self = db.get_peer(@opts[:ip], @opts[:port])
+        peer_self     = db.get_peer(@opts[:ip], @opts[:port])
 
-        sender    = Sender.new(logger, peer_self)
-        election  = Election.new(logger, db, sender, peer_self)
-        kernel    = Kernel.new(logger, db, sender, peer_self, election)
-        listener  = Listener.new(logger, @opts[:port], kernel)
-        reader    = InputReader.new(logger, sender)
+        job_generator = JobGenerator.new(logger, db, peer_self, 1)
+        sender        = Sender.new(logger, peer_self)
+        election      = Election.new(logger, db, sender, peer_self)
+        kernel        = Kernel.new(logger, db, sender, peer_self, election, scheduler, job_generator)
+        listener      = Listener.new(logger, @opts[:port], kernel)
+        reader        = InputReader.new(logger, sender)
 
         # start listener
         lt = Thread.new do

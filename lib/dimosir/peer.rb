@@ -48,10 +48,6 @@ module Dimosir
       id.to_s > peer.id.to_s
     end
 
-    def ==(peer)
-      id.to_s == peer.id.to_s
-    end
-
   end
 
 end

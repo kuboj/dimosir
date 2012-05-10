@@ -4,17 +4,12 @@ module Dimosir
 
     include Loggable
 
-    @db
-
-    def initialize(l, db)
+    def initialize(l)
       set_logger(l)
-      @db = db
     end
 
-    def reschedule_all
-      log(DEBUG, "Rescheduling all")
-      tasks = @db.get_all_tasks
-      peers = @db.get_all_peers
+    def reschedule(peers, tasks)
+      log(DEBUG, "Rescheduling tasks")
       i = 0
 
       tasks.each do |task|

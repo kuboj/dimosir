@@ -36,16 +36,13 @@ describe Dimosir::TaskScheduler do
         :port => "10001"
     )
 
-    @db.stub(:get_all_tasks) { [@t1, @t2, @t3] }
-    @db.stub(:get_all_peers) { [@p1, @p2] }
-
-    @ts = Dimosir::TaskScheduler.new(@logger, @db)
+    @ts = Dimosir::TaskScheduler.new(@logger)
   end
 
   describe "#new" do
 
     it "takes two arguments" do
-      ts = Dimosir::TaskScheduler.new(@logger, @db)
+      ts = Dimosir::TaskScheduler.new(@logger)
       ts.should be_instance_of Dimosir::TaskScheduler
     end
 
@@ -54,7 +51,7 @@ describe Dimosir::TaskScheduler do
   describe "#reschedule_all" do
 
     it "assigns each task to some peer" do
-      @ts.reschedule_all
+      @ts.reschedule([@p1, @p2], [@t1, @t2, @t3])
       @t1.peer.should_not eql nil
       @t2.peer.should_not eql nil
       @t3.peer.should_not eql nil

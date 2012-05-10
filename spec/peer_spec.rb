@@ -56,22 +56,6 @@ describe Dimosir::Peer do
 
   end
 
-  describe "#==" do
-
-    it "compares two peers for equality" do
-      p1 = Dimosir::Peer.new(:ip => "1.1.1.1", :port => 10000, :id => "1")
-      p2 = Dimosir::Peer.new(:ip => "1.1.1.2", :port => 20000, :id => "1")
-      (p1 == p2).should be_true
-    end
-
-    it "compares two peers for inequality" do
-      p1 = Dimosir::Peer.new(:ip => "1.1.1.1", :port => 10000, :id => "1")
-      p2 = Dimosir::Peer.new(:ip => "1.1.1.2", :port => 20000, :id => "2")
-      (p1 != p2).should be_true
-    end
-
-  end
-
   describe "#info" do
 
     it "returns formatted address and id of peer" do

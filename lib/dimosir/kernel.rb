@@ -23,19 +23,23 @@ module Dimosir
     MSG_PING = "kernel.ping"
     MSG_PONG = "kernel.pong"
 
+    MSG_TASK_UPDATE = "task.update"
+
     MASTER_PING_INTERVAL = 10
     MASTER_PONG_WAIT_TIME = 1
 
     SLAVE_PING_INTERVAL = 20
     SLAVE_WAIT_TIME = 1
 
-    def initialize(l, d, s, p, e)
+    def initialize(l, d, s, p, e, ts, jg)
       set_logger(l)
 
-      @db         = d
-      @sender     = s
-      @peer_self  = p
-      @election   = e
+      @db             = d
+      @sender         = s
+      @peer_self      = p
+      @election       = e
+      @task_scheduler = ts
+      @job_generator  = jg
 
       @master_thread      = nil
       @alive_peers        = nil
@@ -69,6 +73,7 @@ module Dimosir
 
     def start
       Thread.new { @election.start_election } # result will determine role - slave/master
+      Thread.new { @job_generator.start }
     end
 
     def consume_message(peer_from, msg)
@@ -86,11 +91,14 @@ module Dimosir
         if msg == MSG_PING then handle_ping(peer_from) end
         if msg == MSG_PONG then handle_pong(peer_from) end
 
+        if msg == MSG_TASK_UPDATE then @job_generator.reload_tasks end
       end
     end
 
     def become_master
       @master_thread = Thread.new do
+        reschedule_tasks
+
         while @peer_master == @peer_self do
           @alive_peers = Hash.new
           peers_other = @db.get_other_peers(@peer_self)
@@ -141,11 +149,18 @@ module Dimosir
 
     def drop_peer(peer)
       log(INFO, "Dropping #{peer.info}")
-      # RM from DB, redistribute jobs
 
       tasks = peer.get_tasks
       tasks.each { |t| t.peer = nil; t.save }
       @db.del_peer(peer)
+      reschedule_tasks
+    end
+
+    def reschedule_tasks
+      #peers = @db.get_other_peers(@peer_master)
+      peers = @db.get_all_peers
+      @task_scheduler.reschedule(peers, @db.get_all_tasks)
+      peers.each { |p| @sender.send_msg(p, MSG_TASK_UPDATE) }
     end
 
   end

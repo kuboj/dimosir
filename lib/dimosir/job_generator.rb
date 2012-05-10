@@ -16,6 +16,8 @@ module Dimosir
       @peer_self    = peer_self
       @tasks_mutex  = Mutex.new
       @sleep_time   = sleep_time
+
+      @tasks        = {}
     end
 
     def start
@@ -25,14 +27,17 @@ module Dimosir
 
     def start_generating
       loop do
-        @tasks.each do |task, last_run|
-          if Time.now.to_i - last_run > task.periodicity
-            log(DEBUG, "Generating job for task #{task.label}")
-            task.generate_job(peer_self)
+        @tasks_mutex.synchronize do
+          @tasks.each do |task, last_run|
+            if Time.now.to_i - last_run > task.periodicity
+              log(DEBUG, "Generating job for task #{task.label}")
+              task.generate_job(@peer_self)
+              @tasks[task] = Time.now.to_i
+            end
           end
         end
 
-        sleep(sleep_time)
+        sleep(@sleep_time)
       end
     end
 
@@ -40,15 +45,15 @@ module Dimosir
       log(INFO, "Reloading tasks")
       tasks_old = @tasks
       tasks_old_str = ""
-      tasks_old.each { |task| tasks_old_str += "#{task.label}, " }
+      tasks_old.each { |task, _| tasks_old_str += "#{task.label}, " }
       log(DEBUG, "Old tasks: #{tasks_old_str}")
       tasks_new = {}
 
       tasks_new_raw = @db.get_tasks(@peer_self)
       tasks_new_str = ""
       tasks_new_raw.each do |task|
-        tasks_old_str += "#{task.label}, "
-        if tasks_old.key_exists?(task)
+        tasks_new_str += "#{task.label}, "
+        if tasks_old.has_key?(task)
           tasks_new[task] = tasks_old[task]
         else
           tasks_new[task] = 0 # task was never run
