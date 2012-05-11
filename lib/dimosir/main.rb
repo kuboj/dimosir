@@ -1,16 +1,7 @@
-# TODO: capturing signals in ruby
 # TODO: init.d/upstart script
 # TODO: communication with daemon - add/del/reload tasks, start/stop/restart
 # TODO: new thread checking network connection. if down, then kill itself
-# TODO: config file
-#               db - host, name, collection, user, password
-#               connection - self ip, port
-#               log level, log file
-#               thread pool - max num of worker threads
-# TODO: log file
-# TODO: RuntimeError - if cannot connect db ...
 # TODO: parameters checking on input
-# TODO: use standard Logger instead of custom SimpleLogger
 
 require "rubygems"
 require "bundler/setup"
@@ -49,8 +40,6 @@ module Dimosir
       #$DEBUG = true
       Thread.abort_on_exception = true
 
-      # parse commandline arguments
-      #@opts = Cmd.parse_argv
       if config_file == "config/config.yaml"
         config_file = "#{File.expand_path(File.dirname(__FILE__))}/../../config/config.yaml"
       end
