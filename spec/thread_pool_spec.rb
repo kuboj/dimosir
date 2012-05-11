@@ -33,8 +33,7 @@ describe Dimosir::ThreadPool do
         job = double("job")
         job.stub(:i => i)
         job.should_receive(:run).once
-        p = Proc.new { |j| j.run }
-        @pool.schedule(job, p)
+        @pool.schedule(job, Proc.new { |j| j.run })
       end
       @pool.shutdown
     end

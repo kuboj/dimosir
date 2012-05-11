@@ -73,6 +73,10 @@ module Dimosir
       Task.all
     end
 
+    def get_unscheduled_jobs(peer)
+      Job.all(:peer_id => peer.id, :scheduled => false, :order => :created_at.asc)
+    end
+
   end
 
 end

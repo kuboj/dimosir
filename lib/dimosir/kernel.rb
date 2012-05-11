@@ -20,6 +20,7 @@ module Dimosir
     @slave_thread
     @last_pinged
 
+    # TODO: module "messages"
     MSG_PING = "kernel.ping"
     MSG_PONG = "kernel.pong"
 

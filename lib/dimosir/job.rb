@@ -11,6 +11,7 @@ module Dimosir
     key :output,      String,   :default  => ""
     key :exitstatus,  Integer,  :default  => nil
     key :task_label,  String,   :required => true
+    key :scheduled,   Boolean,  :default  => false
     belongs_to :task, :class_name => "Dimosir::Task"
     belongs_to :peer, :class_name => "Dimosir::Peer"
 

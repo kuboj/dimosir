@@ -16,6 +16,15 @@ module Dimosir
     def start
       log(DEBUG, "Starting job executor")
       loop do
+        new_jobs = @db.get_unscheduled_jobs(@peer_self)
+        new_jobs.each do |job|
+          log(DEBUG, "scheduling job '#{job.task_label}'")
+          @thread_pool.schedule(job, Proc.new { |j| j.run })
+          job.scheduled = true
+          job.save
+          job.reload
+        end
+
         sleep(SLEEP_TIME)
       end
     end
