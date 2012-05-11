@@ -9,9 +9,10 @@ module Dimosir
 
     def initialize(l, db_host, db_port, db_name, db_user, db_password)
       set_logger(l)
+      db_opts = {:pool_size => 5}
 
       begin
-        MongoMapper.connection = Mongo::Connection.new(db_host, db_port)
+        MongoMapper.connection = Mongo::Connection.new(db_host, db_port, db_opts)
         MongoMapper.database = db_name
         MongoMapper.connection[db_name].authenticate(db_user, db_password)
       rescue => e

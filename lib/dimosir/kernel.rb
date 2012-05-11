@@ -31,7 +31,7 @@ module Dimosir
     SLAVE_PING_INTERVAL = 20
     SLAVE_WAIT_TIME = 1
 
-    def initialize(l, d, s, p, e, ts, jg)
+    def initialize(l, d, s, p, e, ts, jg, je)
       set_logger(l)
 
       @db             = d
@@ -40,6 +40,7 @@ module Dimosir
       @election       = e
       @task_scheduler = ts
       @job_generator  = jg
+      @job_executor   = je
 
       @master_thread      = nil
       @alive_peers        = nil
@@ -74,6 +75,7 @@ module Dimosir
     def start
       Thread.new { @election.start_election } # result will determine role - slave/master
       Thread.new { @job_generator.start }
+      Thread.new { @job_executor.start }
     end
 
     def consume_message(peer_from, msg)

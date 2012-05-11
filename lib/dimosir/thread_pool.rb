@@ -28,6 +28,8 @@ module Dimosir
           end
         end
       end
+
+      log(DEBUG, "Thread pool successfully initialized with size #@size")
     end
 
     def schedule(*args, proc)

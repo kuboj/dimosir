@@ -21,6 +21,7 @@ module Dimosir
       @logger = self
       if f != ""
         @log_target = File.open(f, "a+")
+        $stderr = @log_target # redirect stderr to file
       else
         @log_target = STDERR
       end

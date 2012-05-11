@@ -3,20 +3,16 @@ require "spec_helper"
 describe Dimosir::ThreadPool do
 
   before(:each) do
-    logger = double("logger")
-    logger.stub(:llog => "logged ...")
-    size = 5
-
-    @pool = Dimosir::ThreadPool.new(logger, size)
+    @logger = double("logger")
+    @logger.stub(:llog => "logged ...")
+    @size = 5
+    @pool = Dimosir::ThreadPool.new(@logger, @size)
   end
 
   describe "#new" do
 
     it "takes two parameters" do
-      logger = double("logger")
-      size = 10
-
-      tp = Dimosir::ThreadPool.new(logger, size)
+      tp = Dimosir::ThreadPool.new(@logger, @size)
       tp.should be_instance_of Dimosir::ThreadPool
     end
 

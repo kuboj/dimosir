@@ -1,3 +1,4 @@
+bin/*.pid
 *.pid
 *.log
 .idea

@@ -8,6 +8,8 @@ module Dimosir
 
     @peer_sender
 
+    DELIMITER = "\0"
+
     def initialize(l, p)
       set_logger(l)
 
@@ -22,7 +24,7 @@ module Dimosir
 
       begin
         socket = TCPSocket.new(peer_to.ip.to_s, peer_to.port.to_i)
-        socket.print("#{@peer_sender.to_json}|#{msg}\0")
+        socket.print("#{@peer_sender.to_json}|#{msg}#{DELIMITER}")
       rescue => e
         log(ERROR, "Error sending message.\n\terror msg: #{e.message}")
         no_error = false

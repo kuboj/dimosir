@@ -7,7 +7,7 @@ database:
   password: admin
 peer:
   ip: 127.0.0.1
-  port: 10000
+  port: 22222
 logging:
   log_file: /home/bubo/RubymineProjects/bac1/dimosir.log
   log_level: 1

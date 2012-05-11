@@ -10,6 +10,8 @@ module Dimosir
     @router
     @server
 
+    DELIMITER = "\0"
+
     def initialize(l, p, r)
       set_logger(l)
 
@@ -25,16 +27,14 @@ module Dimosir
           log(DEBUG, "Accepting connection from: #{connection.peeraddr[2]} on local port #@port")
 
           begin
-            # TODO: constant DELIMITER
-            data = connection.gets("\0")
+            data = connection.gets(DELIMITER)
             unless data.nil?
               data.chomp! # removes \n \r ...
-              data.chop! if data[-1] == "\0" # removes last character
+              data.chop! if data[-1] == DELIMITER # removes last character
             end
 
             log(DEBUG, "raw message: #{data}")
 
-            # TODO: begin/rescue block while constructing Peer
             peer = Peer.new_from_json(data.split("|", 2).first)
             msg = data.split("|", 2).last
 

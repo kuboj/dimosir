@@ -4,9 +4,20 @@ module Dimosir
 
     include Loggable
 
-    def initialize(l, tp)
+    SLEEP_TIME = 1
+
+    def initialize(l, db, p, tp)
       set_logger(l)
-      @thread_pool = tp
+      @db           = db
+      @peer_self    = p
+      @thread_pool  = tp
+    end
+
+    def start
+      log(DEBUG, "Starting job executor")
+      loop do
+        sleep(SLEEP_TIME)
+      end
     end
 
   end
