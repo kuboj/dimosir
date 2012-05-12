@@ -162,9 +162,6 @@ module Dimosir
     def reschedule_tasks
       #peers = @db.get_other_peers(@peer_master)
       peers = @db.get_all_peers
-      # TODO: TaskSchedulerFactory(ROUNDROBIN, ...) // SMART , ...
-      # TODO: scheduler has to receive db-independent data.
-      # TODO: translate method, [Dimosir::Peer], [Dimosir::Tasks] -> hash {peer-> [jobs]]}
       @task_scheduler.reschedule(peers, @db.get_all_tasks)
       peers.each { |p| @sender.send_msg(p, MSG_TASK_UPDATE) }
     end

@@ -1,3 +1,8 @@
+# TODO: reloading tasks
+# TODO: abstract task scheduler factory
+
+
+
 # TODO: init.d/upstart script
 # TODO: communication with daemon - add/del/reload tasks, start/stop/restart
 # TODO: new thread checking network connection. if down, then kill itself
@@ -75,7 +80,7 @@ module Dimosir
                         @opts["database"]["user"],
                         @opts["database"]["password"]
                       )
-      scheduler     = TaskScheduler.new(@logger)
+      scheduler     = RRTaskScheduler.new(@logger)
       peer_self     = db.get_peer(@opts["peer"]["ip"], @opts["peer"]["port"])
 
       thread_pool   = ThreadPool.new(@logger, @opts["performance"]["thread_pool_size"])

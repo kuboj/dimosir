@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Dimosir::TaskScheduler do
+describe Dimosir::RRTaskScheduler do
 
   before(:each) do
     @logger = double("logger")
@@ -36,14 +36,14 @@ describe Dimosir::TaskScheduler do
         :port => "10001"
     )
 
-    @ts = Dimosir::TaskScheduler.new(@logger)
+    @ts = Dimosir::RRTaskScheduler.new(@logger)
   end
 
   describe "#new" do
 
     it "takes two arguments" do
-      ts = Dimosir::TaskScheduler.new(@logger)
-      ts.should be_instance_of Dimosir::TaskScheduler
+      ts = Dimosir::RRTaskScheduler.new(@logger)
+      ts.should be_instance_of Dimosir::RRTaskScheduler
     end
 
   end
