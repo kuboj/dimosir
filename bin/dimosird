@@ -3,7 +3,11 @@
 require "daemons"
 require_relative "../lib/dimosir/main"
 
-Daemons.run_proc("dimosird") do
+options = {
+  :dir_mode => :normal,
+  :dir => "#{File.expand_path(File.dirname(__FILE__))}/../pids"
+}
+Daemons.run_proc("dimosird", options) do
   main = Dimosir::Main.new(true, "config/config.yaml")
   main.run
 end

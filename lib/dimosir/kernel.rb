@@ -162,7 +162,8 @@ module Dimosir
     def reschedule_tasks
       #peers = @db.get_other_peers(@peer_master)
       peers = @db.get_all_peers
-      @task_scheduler.reschedule(peers, @db.get_all_tasks)
+      tasks = @db.get_all_tasks
+      @task_scheduler.reschedule(peers, tasks)
       peers.each { |p| @sender.send_msg(p, MSG_TASK_UPDATE) }
     end
 

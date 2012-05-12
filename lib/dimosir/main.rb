@@ -60,17 +60,6 @@ module Dimosir
                         %w(sender listener),
                         @opts["logging"]["log_file"]
                       )
-      # set signal handlers
-      # TODO: to class signal.rb
-      Signal.trap("TERM") do
-        log(INFO, "Got TERM signal, shutting down ...")
-        # TODO: de-register from system, un-assign all tasks, complete currently executed jobs ...
-        Process.exit
-      end
-      Signal.trap("EXIT") do
-        log(INFO, "Got EXIT signal, shutting down ...")
-        Process.exit
-      end
 
       set_logger(@logger)
       db            = DatabaseAdapter.new(
@@ -92,6 +81,23 @@ module Dimosir
       kernel        = Kernel.new(@logger, db, sender, peer_self, election,
                                  scheduler, job_generator, job_executor)
       listener      = Listener.new(@logger, @opts["peer"]["port"], kernel)
+
+      # set signal handlers
+      # TODO: to class signal.rb
+      Signal.trap("USR1") do
+        log(INFO, "Got USR1 signal, reloading tasks")
+        kernel.reschedule_tasks
+      end
+      Signal.trap("TERM") do
+        log(INFO, "Got TERM signal, shutting down ...")
+        thread_pool.shutdown
+        # TODO: de-register from system, un-assign all tasks, complete currently executed jobs ...
+        Process.exit
+      end
+      Signal.trap("EXIT") do
+        log(INFO, "Got EXIT signal, shutting down ...")
+        Process.exit
+      end
 
       lt = Thread.new { listener.start }
       kernel.start

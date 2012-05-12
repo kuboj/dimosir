@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+case ARGV[0]
+  when "add"
+    puts "Not implemented yet. Sorry."
+  when "list"
+    puts "Not implemented yet. Sorry."
+  when "remove"
+    puts "Not implemented yet. Sorry."
+  when "reload"
+    pid_file = "#{File.expand_path(File.dirname(__FILE__))}/../pids/dimosird.pid"
+    if File.exists?(pid_file)
+      pid = File.open(pid_file, "r").read.chomp
+      puts "Sending USR1 signal to process #{pid} ..."
+      Process.kill("USR1", pid.to_i)
+    else
+      puts "PID file not found. Daemon maybe not running ... ?"
+    end
+  else
+    puts "Unknown command."
+end
