@@ -7,7 +7,7 @@ RSpec.configure do |config|
     Dimosir::Job.delete_all
     Dimosir::Peer.delete_all
     Dimosir::Task.delete_all
-    puts MongoMapper.database.collection(Dimosir::Job::GET_STATS_TEMP_COLLECTION).remove
+    #MongoMapper.database.collection(Dimosir::Job::GET_STATS_TEMP_COLLECTION).remove
   end
 
 end
