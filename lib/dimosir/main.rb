@@ -1,8 +1,3 @@
-# TODO: reloading tasks
-# TODO: abstract task scheduler factory
-
-
-
 # TODO: init.d/upstart script
 # TODO: communication with daemon - add/del/reload tasks, start/stop/restart
 # TODO: new thread checking network connection. if down, then kill itself
@@ -42,8 +37,6 @@ module Dimosir
     @logger
 
     def initialize(daemonized, config_file)
-      # config
-      #$DEBUG = true
       Thread.abort_on_exception = true
 
       if config_file == "config/config.yaml"

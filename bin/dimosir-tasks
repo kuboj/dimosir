@@ -16,6 +16,8 @@ case ARGV[0]
     else
       puts "PID file not found. Daemon maybe not running ... ?"
     end
+  when "status"
+
   else
     puts "Unknown command."
 end
