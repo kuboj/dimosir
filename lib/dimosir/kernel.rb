@@ -83,13 +83,13 @@ module Dimosir
       Thread.new do
         log(DEBUG, "Got msg from #{peer_from.info}): #{msg}")
 
-        #msg_type = msg.split(".").first
-        #msg_action = msg.split(".").last
-        #if msg_type == "election" then @election.send(msg_action, peer_from) end
+        msg_type = msg.split(".").first
+        msg_action = msg.split(".").last
+        if msg_type == "election" then @election.send(msg_action, peer_from) end
 
-        if msg == Election::MSG_ELECTION then @election.msg_election(peer_from) end
-        if msg == Election::MSG_MASTER then @election.msg_master(peer_from) end
-        if msg == Election::MSG_ALIVE then @election.msg_alive(peer_from) end
+        #if msg == Election::MSG_ELECTION then @election.msg_election(peer_from) end
+        #if msg == Election::MSG_MASTER then @election.msg_master(peer_from) end
+        #if msg == Election::MSG_ALIVE then @election.msg_alive(peer_from) end
 
         if msg == MSG_PING then handle_ping(peer_from) end
         if msg == MSG_PONG then handle_pong(peer_from) end
