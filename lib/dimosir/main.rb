@@ -9,7 +9,7 @@ require_relative "loggable"
 require_relative "cmd"
 require_relative "database_adapter"
 require_relative "kernel"
-require_relative "election"
+require_relative "bully_election"
 require_relative "listener"
 require_relative "sender"
 require_relative "simple_logger"
@@ -70,7 +70,7 @@ module Dimosir
       job_generator = JobGenerator.new(@logger, db, peer_self)
       job_executor  = JobExecutor.new(@logger, db, peer_self, thread_pool)
       sender        = Sender.new(@logger, peer_self)
-      election      = Election.new(@logger, db, sender, peer_self)
+      election      = BullyElection.new(@logger, db, sender, peer_self)
       kernel        = Kernel.new(@logger, db, sender, peer_self, election,
                                  scheduler, job_generator, job_executor)
       listener      = Listener.new(@logger, @opts["peer"]["port"], kernel)

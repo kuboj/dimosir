@@ -1,13 +1,13 @@
 require "spec_helper"
 
-describe Dimosir::Election do
+describe Dimosir::BullyElection do
 
   before :each do
     @logger = double("logger")
     @db = double("logger")
     @sender = double("sender")
     @peer_self = double("peer_self")
-    @election = Dimosir::Election.new(@logger, @db, @sender, @peer_self)
+    @election = Dimosir::BullyElection.new(@logger, @db, @sender, @peer_self)
   end
 
   describe "#new" do
@@ -17,7 +17,7 @@ describe Dimosir::Election do
       db = double("logger")
       sender = double("sender")
       peer_self = double("peer_self")
-      election = Dimosir::Election.new(logger, db, sender, peer_self)
+      election = Dimosir::BullyElection.new(logger, db, sender, peer_self)
     end
 
   end
@@ -30,7 +30,7 @@ describe Dimosir::Election do
 
       @election.should_receive(:msg_election).once
 
-      @election.send(Dimosir::Election::MSG_ELECTION.split(".").last, peer_from)
+      @election.send(Dimosir::BullyElection::MSG_ELECTION.split(".").last, peer_from)
     end
 
     it "logs received message" do

@@ -1,6 +1,6 @@
 module Dimosir
 
-  class Election
+  class BullyElection
 
     include Loggable
 

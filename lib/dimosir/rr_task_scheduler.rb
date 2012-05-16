@@ -1,8 +1,12 @@
 module Dimosir
 
-  class RRTaskScheduler < TaskScheduler # RoundRobin
+  class RRTaskScheduler # RoundRobin
 
     include Loggable
+
+    def initialize(l)
+      set_logger(l)
+    end
 
     def reschedule(peers, tasks)
       log(DEBUG, "Rescheduling tasks")
