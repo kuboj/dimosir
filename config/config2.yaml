@@ -1,0 +1,15 @@
+---
+database:
+  host: localhost
+  port: 27017
+  db_name: test
+  user: admin
+  password: admin
+peer:
+  ip: 127.0.0.1
+  port: 10001
+logging:
+  log_file: /home/bubo/RubymineProjects/bac1/dimosir.log
+  log_level: 1
+performance:
+  thread_pool_size: 5
