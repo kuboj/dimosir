@@ -1,5 +1,8 @@
 # TODO: host check
-# TODO: simple alerting
+# TODO: simple alerting - email in config
+# TODO: ring election
+# TODO: vahovane rozdelenie taskov
+# TODO: po dostani USR1, poslanie spravy mastrovi, ten prerozdeli
 
 # TODO: init.d/upstart script
 # TODO: communication with daemon - add/del/reload tasks, start/stop/restart

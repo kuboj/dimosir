@@ -3,3 +3,5 @@ bin/*.pid
 *.log
 .idea
 doc 
+config/config.yaml
+config/config2.yaml
