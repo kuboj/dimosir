@@ -22,18 +22,6 @@ describe Dimosir::Job do
     @task.destroy
   end
 
-  describe "::check_exists" do
-
-    it "checks that 'ping' exists" do
-      Dimosir::Job.check_exists("ping").should be_true
-    end
-
-    it "checks that 'nonexisting' doesn't exists" do
-      Dimosir::Job.check_exists("nonexisting").should be_false
-    end
-
-  end
-
   describe "::get_stats" do
 
     it "inserts some values and mapreduce runs correctly" do

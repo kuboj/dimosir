@@ -1,9 +1,11 @@
-# TODO: host check
 # TODO: simple alerting - email in config
 # TODO: ring election
 # TODO: vahovane rozdelenie taskov
 # TODO: po dostani USR1, poslanie spravy mastrovi, ten prerozdeli
 
+# TODO: dalsie navrhove vzory? please ?
+
+# TODO: create instance of Loader
 # TODO: init.d/upstart script
 # TODO: communication with daemon - add/del/reload tasks, start/stop/restart
 # TODO: new thread checking network connection. if down, then kill itself
@@ -27,11 +29,11 @@ require_relative "rr_task_scheduler"
 require_relative "job_generator"
 require_relative "job_executor"
 require_relative "config"
+require_relative "loader"
 
 require_relative "thread_pool"
 require_relative "../trollop/trollop"
 require_relative "check/abstract_check"
-require_relative "check/ping"
 
 module Dimosir
 

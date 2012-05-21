@@ -2,14 +2,14 @@
 database:
   host: localhost
   port: 27017
-  db_name: test
-  user: admin
-  password: admin
+  db_name: dimosir
+  user: dimosir
+  password: eh554h4u3yhe
 peer:
   ip: 127.0.0.1
   port: 10000
 logging:
-  log_file: /home/bubo/RubymineProjects/bac1/dimosir.log
+  log_file: /tmp/dimosir/dimosir.log
   log_level: 1
 performance:
   thread_pool_size: 5
