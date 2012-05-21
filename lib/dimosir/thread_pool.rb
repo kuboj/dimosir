@@ -32,7 +32,7 @@ module Dimosir
       log(DEBUG, "Thread pool successfully initialized with size #@size")
     end
 
-    def schedule(*args, job) # TODO: job has to be callable (responds to :call)
+    def schedule(*args, job) # TODO: job has to be callable (responds to :call), e.g. Proc
       log(DEBUG, "New proc scheduled. #{@jobs.size} jobs in queue")
       @jobs << [job, args]
     end

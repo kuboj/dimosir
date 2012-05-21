@@ -1,3 +1,6 @@
+# TODO: host check
+# TODO: simple alerting
+
 # TODO: init.d/upstart script
 # TODO: communication with daemon - add/del/reload tasks, start/stop/restart
 # TODO: new thread checking network connection. if down, then kill itself
