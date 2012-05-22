@@ -77,6 +77,10 @@ module Dimosir
       Job.all(:peer_id => peer.id, :scheduled => false, :order => :created_at.asc)
     end
 
+    def get_notalerted_jobs
+      Job.all(:exitstatus => {:$ne => 0}, :alerted => false)
+    end
+
   end
 
 end

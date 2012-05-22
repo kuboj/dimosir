@@ -32,7 +32,7 @@ module Dimosir
     SLAVE_PING_INTERVAL = 20
     SLAVE_WAIT_TIME = 1
 
-    def initialize(l, d, s, p, e, ts, jg, je)
+    def initialize(l, d, s, p, e, ts, jg, je, a)
       set_logger(l)
 
       @db             = d
@@ -42,6 +42,7 @@ module Dimosir
       @task_scheduler = ts
       @job_generator  = jg
       @job_executor   = je
+      @alerter        = a
 
       @master_thread      = nil
       @alive_peers        = nil
@@ -111,6 +112,8 @@ module Dimosir
           @alive_peers.each do |peer, alive|
             drop_peer(peer) unless alive
           end
+
+          Thread.new { @alerter.check }
 
           sleep(MASTER_PING_INTERVAL)
         end

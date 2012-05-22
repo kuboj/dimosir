@@ -1,4 +1,3 @@
-# TODO: simple alerting - email in config
 # TODO: ring election
 # TODO: vahovane rozdelenie taskov
 # TODO: po dostani USR1, poslanie spravy mastrovi, ten prerozdeli
@@ -13,6 +12,7 @@
 
 require "rubygems"
 require "bundler/setup"
+require_relative "../trollop/trollop"
 require_relative "loggable"
 require_relative "cmd"
 require_relative "database_adapter"
@@ -30,10 +30,9 @@ require_relative "job_generator"
 require_relative "job_executor"
 require_relative "config"
 require_relative "loader"
-
 require_relative "thread_pool"
-require_relative "../trollop/trollop"
 require_relative "check/abstract_check"
+require_relative "alerter"
 
 module Dimosir
 
@@ -71,6 +70,7 @@ module Dimosir
                         @opts["database"]["user"],
                         @opts["database"]["password"]
                       )
+      alerter       = Alerter.new(@logger, db, @opts["mail"])
       scheduler     = RRTaskScheduler.new(@logger)
       peer_self     = db.get_peer(@opts["peer"]["ip"], @opts["peer"]["port"])
 
@@ -80,7 +80,7 @@ module Dimosir
       sender        = Sender.new(@logger, peer_self)
       election      = BullyElection.new(@logger, db, sender, peer_self)
       kernel        = Kernel.new(@logger, db, sender, peer_self, election,
-                                 scheduler, job_generator, job_executor)
+                                 scheduler, job_generator, job_executor, alerter)
       listener      = Listener.new(@logger, @opts["peer"]["port"], kernel)
 
       # set signal handlers
