@@ -28,7 +28,8 @@ module Dimosir
     def get_higher_peers(peer_self)
       peers = get_other_peers(peer_self)
       peers.select! { |peer| peer > peer_self } # leave higher peers only
-      return peers
+
+      peers
     end
 
     def get_other_peers(peer_self)
