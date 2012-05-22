@@ -1,23 +1,73 @@
 #!/usr/bin/env ruby
 
+require "rubygems"
+require "bundler/setup"
+require_relative "../lib/trollop/trollop"
+require_relative "../lib/dimosir/loggable"
+#require_relative "../lib/dimosir/cmd"
+require_relative "../lib/dimosir/database_adapter"
+#require_relative "../lib/dimosir/kernel"
+#require_relative "../lib/dimosir/bully_election"
+#require_relative "../lib/dimosir/listener"
+#require_relative "../lib/dimosir/sender"
+require_relative "../lib/dimosir/simple_logger"
+require_relative "../lib/dimosir/task"
+require_relative "../lib/dimosir/peer"
+require_relative "../lib/dimosir/job"
+#require_relative "../lib/dimosir/task_scheduler"
+#require_relative "../lib/dimosir/rr_task_scheduler"
+#require_relative "../lib/dimosir/job_generator"
+#require_relative "../lib/dimosir/job_executor"
+require_relative "../lib/dimosir/config"
+#require_relative "../lib/dimosir/loader"
+#require_relative "../lib/dimosir/thread_pool"
+#require_relative "../lib/dimosir/check/abstract_check"
+#require_relative "../lib/dimosir/alerter"
+
+config  = Dimosir::Config.parse_file("#{File.expand_path(File.dirname(__FILE__))}/../config/config.yaml")
+logger  = Dimosir::SimpleLogger.new(3, [], "")
+db      = Dimosir::DatabaseAdapter.new(logger,
+                                       config["database"]["host"],
+                                       config["database"]["port"],
+                                       config["database"]["db_name"],
+                                       config["database"]["user"],
+                                       config["database"]["password"])
+
 case ARGV[0]
   when "add"
-    puts "Not implemented yet. Sorry."
+    t = Dimosir::Task.create(
+      :label => ARGV[1],
+      :check => ARGV[2],
+      :periodicity => ARGV[3],
+      :target_host => ARGV[4],
+      :arguments => JSON.parse(ARGV[5]))
+    if t.save
+      puts "-> Task added."
+    else
+      puts "-> Error:"
+      t.errors.each { |attr, msg| puts "#{attr} - #{msg}" }
+    end
   when "list"
-    puts "Not implemented yet. Sorry."
+    tasks = Dimosir::Task.all
+    i = 0
+    tasks.each { |t| puts "#{t.label} - #{t.check}, #{t.periodicity}, #{t.target_host}"; i += 1 }
+    puts "-> Total #{i} tasks."
   when "remove"
-    puts "Not implemented yet. Sorry."
+    task_label = ARGV[1]
+    tasks = Dimosir::Task.all(:label => ARGV[1])
+    tasks.each { |t| t.destroy; puts "-> Task '#{t.label}' removed." }
+    puts "-> Task not found" if tasks.size == 0
   when "reload"
     pid_file = "#{File.expand_path(File.dirname(__FILE__))}/../pids/dimosird.pid"
     if File.exists?(pid_file)
       pid = File.open(pid_file, "r").read.chomp
-      puts "Sending USR1 signal to process #{pid} ..."
+      puts "-> Sending USR1 signal to process #{pid} ..."
       Process.kill("USR1", pid.to_i)
     else
-      puts "PID file not found. Maybe daemon is not running ... ?"
+      puts "-> PID file not found. Maybe daemon is not running ... ?"
     end
   when "status"
-
+    puts "Not implemented yet. Sorry."
   else
     puts "Unknown command. \nUsage: dimosir-tasks {add|list|remove|reload}"
 end
