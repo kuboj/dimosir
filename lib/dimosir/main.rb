@@ -1,6 +1,5 @@
 # TODO: ring election
 # TODO: vahovane rozdelenie taskov
-# TODO: po dostani USR1, poslanie spravy mastrovi, ten prerozdeli
 
 # TODO: dalsie navrhove vzory? please ?
 
@@ -87,7 +86,7 @@ module Dimosir
       # TODO: to class signal.rb
       Signal.trap("USR1") do
         log(INFO, "Got USR1 signal, reloading tasks")
-        kernel.reschedule_tasks
+        kernel.require_reschedule
       end
       Signal.trap("TERM") do
         log(INFO, "Got TERM signal, shutting down ...")

@@ -25,6 +25,7 @@ module Dimosir
     MSG_PONG = "kernel.pong"
 
     MSG_TASK_UPDATE = "task.update"
+    MSG_TASK_RESCHEDULE = "task.reschedule"
 
     # TODO: put these in app_config
     MASTER_PING_INTERVAL = 10
@@ -92,6 +93,7 @@ module Dimosir
         if msg == MSG_PONG then handle_pong(peer_from) end
 
         if msg == MSG_TASK_UPDATE then @job_generator.reload_tasks end
+        if msg == MSG_TASK_RESCHEDULE && @peer_self == @peer_master then reschedule_tasks end
       end
     end
 
@@ -156,6 +158,10 @@ module Dimosir
       tasks.each { |t| t.peer = nil; t.save }
       @db.del_peer(peer)
       reschedule_tasks
+    end
+
+    def require_reschedule
+      @sender.send_msg(@peer_master, MSG_TASK_RESCHEDULE)
     end
 
     def reschedule_tasks
