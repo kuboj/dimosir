@@ -14,10 +14,10 @@ case ARGV[0]
       puts "Sending USR1 signal to process #{pid} ..."
       Process.kill("USR1", pid.to_i)
     else
-      puts "PID file not found. Daemon maybe not running ... ?"
+      puts "PID file not found. Maybe daemon is not running ... ?"
     end
   when "status"
 
   else
-    puts "Unknown command."
+    puts "Unknown command. \nUsage: dimosir-tasks {add|list|remove|reload}"
 end
