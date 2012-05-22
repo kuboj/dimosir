@@ -24,7 +24,7 @@ module Dimosir
 
     def send_alert(job)
       log(INFO, "Sending alert. '#{job.task_label}' failed with status #{job.exitstatus}")
-      Pony.mail(:body => "#{job.task_label} failed.\ntarget host:#{job.task.target_host}\nstatus: #{job.exitstatus}\noutput: #{job.output}")
+      #Pony.mail(:body => "#{job.task_label} failed.\ntarget host:#{job.task.target_host}\nstatus: #{job.exitstatus}\noutput: #{job.output}")
     end
 
   end

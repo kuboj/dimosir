@@ -1,7 +1,6 @@
+# TODO: dalsie navrhove vzory? logger -> singleton ?
 # TODO: ring election
 # TODO: vahovane rozdelenie taskov
-
-# TODO: dalsie navrhove vzory? please ?
 
 # TODO: create instance of Loader
 # TODO: init.d/upstart script
