@@ -5,7 +5,7 @@ module Dimosir
     class Host < AbstractCheck
 
       def perform_check
-        output = `host #@target_host`
+        output = `host #{@arguments["lookup"]} #@target_host`
         retval = $?.exitstatus
 
         [output, retval]

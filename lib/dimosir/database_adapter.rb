@@ -79,7 +79,7 @@ module Dimosir
     end
 
     def get_notalerted_jobs
-      Job.all(:exitstatus => {:$ne => 0}, :alerted => false)
+      Job.all(:exitstatus => {:$ne => 0}, :alerted => false, :done => true)
     end
 
   end
