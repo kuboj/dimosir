@@ -42,7 +42,7 @@ case ARGV[0]
   when "list"
     tasks = Dimosir::Task.all
     i = 0
-    tasks.each { |t| puts "#{t.label} - #{t.check}, #{t.periodicity}, #{t.target_host}"; i += 1 }
+    tasks.each { |t| puts "#{t.label} - #{t.check}, #{t.periodicity}, #{t.target_host}, #{t.arguments.to_s}"; i += 1 }
     puts "-> Total #{i} tasks."
   when "remove"
     task_label = ARGV[1]
