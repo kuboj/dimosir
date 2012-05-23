@@ -7,6 +7,8 @@ module Dimosir
 
     include Loggable
 
+    GET_STATS_TEMP_COLLECTION = "job_stats_mapreduce"
+
     def initialize(l, db_host, db_port, db_name, db_user, db_password)
       set_logger(l)
       db_opts = {:pool_size => 5}
@@ -80,6 +82,55 @@ module Dimosir
 
     def get_notalerted_jobs
       Job.all(:exitstatus => {:$ne => 0}, :alerted => false, :done => true)
+    end
+
+    def get_job_stats
+      map =
+          <<-JS
+        function() {
+          emit(this.task_id, {task_label: this.task_label, exitstatus: this.exitstatus});
+        }
+      JS
+
+      reduce =
+          <<-JS
+        function(key, values) {
+          var statuses = {};
+          var successful = 0;
+          var unsuccessful = 0;
+          for (var i = 0; i < values.length; i++) {
+            var exitstatus = values[i]["exitstatus"];
+            if (statuses[exitstatus] == undefined) {
+              statuses[exitstatus] = 0;
+            }
+
+            // convert floats to integers, see https://jira.mongodb.org/browse/SERVER-854
+            statuses[exitstatus] = NumberInt(statuses[exitstatus] + 1);
+            if (exitstatus == 0) {
+              successful++;
+            } else {
+              unsuccessful++;
+            }
+          }
+
+          return {
+            task_label: values[0]["task_label"],
+            successful: NumberInt(successful),
+            unsuccessful: NumberInt(unsuccessful),
+            statuses: statuses
+          }
+        }
+      JS
+
+      opts = {
+          :query => {:done => true},
+          :out => GET_STATS_TEMP_COLLECTION
+      }
+      stats = Job.collection.map_reduce(map, reduce, opts).find
+      out = []
+      stats.each { |s| out << s }
+
+      out
     end
 
   end
