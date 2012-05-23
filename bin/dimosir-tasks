@@ -58,8 +58,9 @@ case ARGV[0]
     else
       puts "-> PID file not found. Maybe daemon is not running ... ?"
     end
-  when "status"
-    puts "Not implemented yet. Sorry."
+  when "stats"
+    puts Dimosir::Job.get_stats
+    #puts "Not implemented yet. Sorry."
   else
-    puts "Unknown command. \nUsage: dimosir-tasks {add|list|remove|reload}"
+    puts "Unknown command. \nUsage: dimosir-tasks {add|list|remove|reload|stats}"
 end

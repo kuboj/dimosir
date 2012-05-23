@@ -53,7 +53,7 @@ module Dimosir
         peer_self = peers[0]
         log(DEBUG, "Peer found in db: #{peer_self.id}")
       else # peers.count > 1
-        log(WARNING, "Multiple peers with ip #{ip} and port #{port} found. taking first")
+        log(WARNING, "Multiple peers with ip #{ip} and port #{port} found. Taking first.")
         peer_self = peers[0]
       end
 
