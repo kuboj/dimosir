@@ -19,7 +19,7 @@ module Dimosir
         new_jobs = @db.get_unscheduled_jobs(@peer_self)
         new_jobs.each do |job|
           log(DEBUG, "scheduling job '#{job.task_label}'")
-          @thread_pool.schedule(job, Proc.new { |j| j.run })
+          @thread_pool.schedule(job, Proc.new { |j| j.run }) # TODO: handle situation when check doesn't exist and j.run raises exception
           job.scheduled = true
           job.save
           job.reload
