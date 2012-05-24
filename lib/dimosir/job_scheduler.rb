@@ -1,6 +1,6 @@
 module Dimosir
 
-  class JobExecutor
+  class JobScheduler
 
     include Loggable
 

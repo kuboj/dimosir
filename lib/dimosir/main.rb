@@ -24,7 +24,7 @@ require_relative "peer"
 require_relative "job"
 require_relative "rr_task_scheduler"
 require_relative "job_generator"
-require_relative "job_executor"
+require_relative "job_scheduler"
 require_relative "config"
 require_relative "loader"
 require_relative "thread_pool"
@@ -73,7 +73,7 @@ module Dimosir
 
       thread_pool   = ThreadPool.new(@logger, @opts["performance"]["thread_pool_size"])
       job_generator = JobGenerator.new(@logger, db, peer_self)
-      job_executor  = JobExecutor.new(@logger, db, peer_self, thread_pool)
+      job_executor  = JobScheduler.new(@logger, db, peer_self, thread_pool)
       sender        = Sender.new(@logger, peer_self)
       election      = BullyElection.new(@logger, db, sender, peer_self)
       kernel        = Kernel.new(@logger, db, sender, peer_self, election,
