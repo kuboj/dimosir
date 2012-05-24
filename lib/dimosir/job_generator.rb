@@ -30,11 +30,10 @@ module Dimosir
       loop do
         @tasks_mutex.synchronize do
           @tasks.each do |task, last_run|
-            if Time.now.to_i - last_run > task.periodicity
-              log(DEBUG, "Generating job for task #{task.label}")
-              task.generate_job(@peer_self)
-              @tasks[task] = Time.now.to_i
-            end
+            continue if Time.now.to_i - last_run < task.periodicity
+            log(DEBUG, "Generating job for task #{task.label}")
+            task.generate_job(@peer_self)
+            @tasks[task] = Time.now.to_i
           end
         end
 

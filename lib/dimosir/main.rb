@@ -68,13 +68,13 @@ module Dimosir
                         @opts["database"]["password"]
                       )
       alerter       = Alerter.new(@logger, db, @opts["mail"])
-      scheduler     = RRTaskScheduler.new(@logger)
       peer_self     = db.get_peer(@opts["peer"]["ip"], @opts["peer"]["port"])
 
       thread_pool   = ThreadPool.new(@logger, @opts["performance"]["thread_pool_size"])
       job_generator = JobGenerator.new(@logger, db, peer_self)
       job_executor  = JobScheduler.new(@logger, db, peer_self, thread_pool)
       sender        = Sender.new(@logger, peer_self)
+      scheduler     = RRTaskScheduler.new(@logger)
       election      = BullyElection.new(@logger, db, sender, peer_self)
       kernel        = Kernel.new(@logger, db, sender, peer_self, election,
                                  scheduler, job_generator, job_executor, alerter)
