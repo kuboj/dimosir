@@ -8,6 +8,7 @@ module Dimosir
     include Loggable
 
     GET_STATS_TEMP_COLLECTION = "job_stats_mapreduce"
+    GET_TASK_STATS_TEMP_COLLECTION = "task_stats_mapreduce"
 
     def initialize(l, db_host, db_port, db_name, db_user, db_password)
       set_logger(l)
@@ -84,7 +85,7 @@ module Dimosir
       Job.all(:exitstatus => {:$ne => 0}, :alerted => false, :done => true)
     end
 
-    def get_job_stats
+    def self.get_job_stats
       map =
           <<-JS
         function() {
@@ -125,6 +126,47 @@ module Dimosir
       opts = {
           :query => {:done => true},
           :out => GET_STATS_TEMP_COLLECTION
+      }
+      stats = Job.collection.map_reduce(map, reduce, opts).find
+      out = []
+      stats.each { |s| out << s }
+
+      out
+    end
+
+    def self.get_task_stats
+      map =
+      <<-JS
+        function() {
+          emit(this.task_label, {successful: (this.exitstatus == 0)});
+        }
+      JS
+
+      reduce =
+      <<-JS
+        function(key, values) {
+          var successful = 0;
+          var unsuccessful = 0;
+          for (var i = 0; i < values.length; i++) {
+            if (values[i]["successful"]) {
+              successful++;
+            } else {
+              unsuccessful++;
+            }
+          }
+
+          return {
+            task_label: key,
+            successful: NumberInt(successful),
+            unsuccessful: NumberInt(unsuccessful),
+            success: (successful/(successful+unsuccessful)*100)
+          }
+        }
+      JS
+
+      opts = {
+          :query => {:done => true},
+          :out => GET_TASK_STATS_TEMP_COLLECTION
       }
       stats = Job.collection.map_reduce(map, reduce, opts).find
       out = []

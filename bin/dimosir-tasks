@@ -59,8 +59,7 @@ case ARGV[0]
       puts "-> PID file not found. Maybe daemon is not running ... ?"
     end
   when "stats"
-    puts db.get_job_stats
-    #puts "Not implemented yet. Sorry."
+    puts Dimosir::DatabaseAdapter.get_task_stats
   else
     puts "Unknown command. \nUsage: dimosir-tasks {add|list|remove|reload|stats}"
 end
