@@ -20,6 +20,15 @@ describe Dimosir::ThreadPool do
 
   describe "#schedule" do
 
+    it "logs when new job is scheduler" do
+      logger = double("logger")
+      logger.should_receive(:llog).twice
+      size = 5
+
+      pool = Dimosir::ThreadPool.new(logger, size)
+      pool.schedule([], Proc.new { })
+    end
+
     it "schedules single job and executes it" do
       job = double("job")
       job.should_receive(:run).once
