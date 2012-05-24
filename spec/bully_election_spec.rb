@@ -18,6 +18,7 @@ describe Dimosir::BullyElection do
       sender = double("sender")
       peer_self = double("peer_self")
       election = Dimosir::BullyElection.new(logger, db, sender, peer_self)
+      election.should be_instance_of Dimosir::BullyElection
     end
 
   end
@@ -29,7 +30,6 @@ describe Dimosir::BullyElection do
       peer_from.stub(:info => "mocked peer_from")
 
       @election.should_receive(:msg_election).once
-
       @election.send(Dimosir::BullyElection::MSG_ELECTION.split(".").last, peer_from)
     end
 
@@ -39,7 +39,6 @@ describe Dimosir::BullyElection do
       peer_from.stub(:<).and_return(false)
 
       @logger.should_receive(:llog).once
-
       @election.msg_election(peer_from)
     end
 

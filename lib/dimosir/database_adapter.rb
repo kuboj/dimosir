@@ -138,7 +138,9 @@ module Dimosir
       map =
       <<-JS
         function() {
-          emit(this.task_label, {successful: (this.exitstatus == 0)});
+          if (this.done) {
+            emit(this.task_label, {successful: (this.exitstatus == 0)});
+          }
         }
       JS
 
@@ -165,7 +167,6 @@ module Dimosir
       JS
 
       opts = {
-          :query => {:done => true},
           :out => GET_TASK_STATS_TEMP_COLLECTION
       }
       stats = Job.collection.map_reduce(map, reduce, opts).find
